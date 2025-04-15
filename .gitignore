@@ -4,7 +4,6 @@
 output
 **/node_modules/*
 .history
-**/public/dist/*
 auth.db
 **/test/*
 **/public/node_modules/*
