@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Field Mapping Report</title>
+    
+    <!-- Light and dark mode CSS -->
+    <link id="lightCss" rel="stylesheet" href="assets/style.css">
+    <link id="darkCss" rel="stylesheet" href="assets/dark-style.css" disabled>
+    
+    <script>
+        // Check for user preference and local storage setting
+        function setTheme() {
+            const darkMode = localStorage.getItem('darkMode') === 'true' || 
+                             (localStorage.getItem('darkMode') === null && 
+                              window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            
+            if (darkMode) {
+                document.getElementById('lightCss').disabled = true;
+                document.getElementById('darkCss').disabled = false;
+                document.documentElement.classList.add('dark-mode');
+                if (document.getElementById('themeToggle')) {
+                    document.getElementById('themeToggle').checked = true;
+                }
+            } else {
+                document.getElementById('lightCss').disabled = false;
+                document.getElementById('darkCss').disabled = true;
+                document.documentElement.classList.remove('dark-mode');
+                if (document.getElementById('themeToggle')) {
+                    document.getElementById('themeToggle').checked = false;
+                }
+            }
+        }
+        
+        // Toggle between light and dark mode
+        function toggleTheme() {
+            const isDarkMode = document.getElementById('darkCss').disabled === false;
+            localStorage.setItem('darkMode', !isDarkMode);
+            setTheme();
+        }
+        
+        // Set initial theme
+        document.addEventListener('DOMContentLoaded', setTheme);
+    </script>
+    
+    
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>Field Mapping Report</h1>
+                
+                
+                <div class="theme-toggle">
+                    <label class="switch">
+                        <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="toggle-label">Dark Mode</span>
+                </div>
+                
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="javascript:history.back()">Back</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        
+<div class="report">
+    <div class="report-header">
+        <div class="info-box">
+            <p><strong>Execution ID:</strong> bbf5ef77</p>
+            <p><strong>Session Hash:</strong> 41c7a0579c0beff3d99fd1d3efae10ffc02bcf6ce30cc84847200c5703ae50cf</p>
+            <p><strong>Generated:</strong> 2025-04-14 20:13:53</p>
+        </div>
+    </div>
+    
+    <h2>Mapping Summary</h2>
+    <table class="data-table">
+        <tr>
+            <th>Mapping File</th>
+            <td>C:\xampp\htdocs\DocTypeGen\output\41c7a0579c0beff3d99fd1d3efae10ffc02bcf6ce30cc84847200c5703ae50cf\mappings\41c7a0579c0beff3d99fd1d3efae10ffc02bcf6ce30cc84847200c5703ae50cf_mapping.json</td>
+        </tr>
+        <tr>
+            <th>Fields Mapped</th>
+            <td>15</td>
+        </tr>
+        <tr>
+            <th>Schema Fields</th>
+            <td>12</td>
+        </tr>
+        <tr>
+            <th>Coverage</th>
+            <td>125.0%</td>
+        </tr>
+    </table>
+    
+    <h2>Field Mapping</h2>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Schema Field</th>
+                    <th>Column Name</th>
+                    <th>Required</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr class="invalid">
+                    <td>COMPANY_NAME</td>
+                    <td>Not Mapped</td>
+                    <td>Yes</td>
+                    <td>LEV_DISTANCE</td>
+                </tr>
+                
+                <tr class="invalid">
+                    <td>SHAREHOLDER_ID_NUMBER</td>
+                    <td>Not Mapped</td>
+                    <td>Yes</td>
+                    <td>SA_ID_NUMBER</td>
+                </tr>
+                
+                <tr class="invalid">
+                    <td>SHAREHOLDER_NUMBER</td>
+                    <td>Not Mapped</td>
+                    <td>Yes</td>
+                    <td>REGEX</td>
+                </tr>
+                
+                <tr class="invalid">
+                    <td>SHAREHOLDER_FULL_NAME</td>
+                    <td>Not Mapped</td>
+                    <td>Yes</td>
+                    <td>REGEX</td>
+                </tr>
+                
+                <tr class="invalid">
+                    <td>ADDRESS_LINE</td>
+                    <td>Not Mapped</td>
+                    <td>Yes</td>
+                    <td>REGEX</td>
+                </tr>
+                
+                <tr class="invalid">
+                    <td>SA_POSTAL_CODE</td>
+                    <td>Not Mapped</td>
+                    <td>Yes</td>
+                    <td>REGEX</td>
+                </tr>
+                
+                <tr class="invalid">
+                    <td>DOMICILE_CODE</td>
+                    <td>Not Mapped</td>
+                    <td>No</td>
+                    <td>ENUM</td>
+                </tr>
+                
+                <tr class="invalid">
+                    <td>PAYMENT_DATE</td>
+                    <td>Not Mapped</td>
+                    <td>Yes</td>
+                    <td>UNIX_DATE</td>
+                </tr>
+                
+                <tr class="invalid">
+                    <td>AMOUNT_PAID</td>
+                    <td>Not Mapped</td>
+                    <td>Yes</td>
+                    <td>DECIMAL_AMOUNT</td>
+                </tr>
+                
+                <tr class="invalid">
+                    <td>BANK_NAME</td>
+                    <td>Not Mapped</td>
+                    <td>Yes</td>
+                    <td>LEV_DISTANCE</td>
+                </tr>
+                
+                <tr class="invalid">
+                    <td>BANK_ACCOUNT_NUMBER</td>
+                    <td>Not Mapped</td>
+                    <td>Yes</td>
+                    <td>REGEX</td>
+                </tr>
+                
+                <tr class="invalid">
+                    <td>PAYMENT_REFERENCE</td>
+                    <td>Not Mapped</td>
+                    <td>Yes</td>
+                    <td>REGEX</td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <h2>Mapping JSON</h2>
+    <pre><code>{
+  "Address 1": {
+    "slug": [
+      "ADDRESS_LINE_2"
+    ],
+    "type": "ADDRESS_LINE_2",
+    "validation": "NONE",
+    "validation_type": "NONE"
+  },
+  "Address 2": {
+    "slug": [
+      "ADDRESS_LINE_3"
+    ],
+    "type": "ADDRESS_LINE_3",
+    "validation": "NONE",
+    "validation_type": "NONE"
+  },
+  "Address 3": {
+    "slug": [
+      "ADDRESS_LINE_4"
+    ],
+    "type": "ADDRESS_LINE_4",
+    "validation": "NONE",
+    "validation_type": "NONE"
+  },
+  "Address 4": {
+    "slug": [
+      "ADDRESS_LINE_5"
+    ],
+    "type": "ADDRESS_LINE_5",
+    "validation": "NONE",
+    "validation_type": "NONE"
+  },
+  "Amount Paid": {
+    "description": "Validation: DECIMAL_AMOUNT. Amount paid 00.00",
+    "required": true,
+    "slug": [
+      "AMOUNT_PAID"
+    ],
+    "type": "AMOUNT_PAID",
+    "validation": "DECIMAL_AMOUNT",
+    "validation_type": "DECIMAL_AMOUNT"
+  },
+  "Bank Account Number": {
+    "description": "Matches a South African bank account number in either:\n- Fully masked format with 9 asterisks followed by 4 digits (e.g., \u0027*********6960\u0027), or\n- Fully visible numeric account number (6 to 11 digits, e.g., \u002712345678901\u0027).",
+    "regex": "^(?:\\*{9}\\d{4}|\\d{6,11})$",
+    "required": true,
+    "slug": [
+      "BANK_ACCOUNT_NUMBER"
+    ],
+    "type": "BANK_ACCOUNT_NUMBER",
+    "validation": "REGEX",
+    "validation_type": "REGEX"
+  },
+  "Bank Name": {
+    "description": "Validation: REGEX. The shareholder full name of the",
+    "regex": "^[A-Za-z\\s\u0027\u0027\\-]+$",
+    "required": true,
+    "slug": [
+      "SHAREHOLDER_FULL_NAME"
+    ],
+    "type": "SHAREHOLDER_FULL_NAME",
+    "validation": "REGEX",
+    "validation_type": "REGEX"
+  },
+  "Company Name": {
+    "description": "Validation: LEV_DISTANCE. The company matched against the list of companies with 80% similarity",
+    "distance": 80,
+    "list": "COMPANY_NAME",
+    "required": true,
+    "slug": [
+      "COMPANY_NAME",
+      "COMPANY",
+      "ISSUER"
+    ],
+    "type": "COMPANY_NAME",
+    "validation": "LEV_DISTANCE",
+    "validation_type": "LEV_DISTANCE"
+  },
+  "Domicile Code": {
+    "description": "Validation: ENUM. The shareholder country code validated against the COUNTRY_CODE list with 100% accuracy (ENUM)",
+    "enum": "COUNTRY_CODE",
+    "slug": [
+      "DOMICILE_CODE"
+    ],
+    "type": "DOMICILE_CODE",
+    "validation": "ENUM",
+    "validation_type": "ENUM"
+  },
+  "Payment Date": {
+    "description": "Validation: UNIX_DATE. Date the payment was made",
+    "required": true,
+    "slug": [
+      "PAYMENT_DATE"
+    ],
+    "type": "PAYMENT_DATE",
+    "validation": "UNIX_DATE",
+    "validation_type": "UNIX_DATE"
+  },
+  "Payment Reference": {
+    "description": "Matches flexible South African-style payment references with optional alphabetic prefixes or suffixes. Format includes:\n- A core numeric section (6\u00e2\u20ac\u201c15 digits)\n- Optional alphabetic prefix (e.g., \u0027U\u0027, \u0027C\u0027, \u0027YY\u0027)\n- Optional slash-suffix (e.g., \u0027/OML\u0027, \u0027/QLT\u0027)\n- Optional trailing letters after numeric or suffix segments",
+    "regex": "^[A-Z]*\\d{6,15}(?:\\/[A-Z]+)?[A-Z]*$",
+    "required": true,
+    "slug": [
+      "PAYMENT_REFERENCE"
+    ],
+    "type": "PAYMENT_REFERENCE",
+    "validation": "REGEX",
+    "validation_type": "REGEX"
+  },
+  "Postal Code": {
+    "description": "Validation: REGEX. The shareholder address postal code (must be a valid 4-digit SA postal code, excluding 0000).",
+    "regex": "^\\d{4}$",
+    "required": true,
+    "slug": [
+      "SA_POSTAL_CODE"
+    ],
+    "type": "SA_POSTAL_CODE",
+    "validation": "REGEX",
+    "validation_type": "REGEX"
+  },
+  "Shareholder Full Name": {
+    "description": "Validation: REGEX. The shareholder address line 1 to 5",
+    "regex": "^.{2,}$",
+    "required": true,
+    "slug": [
+      "ADDRESS_LINE",
+      "ADDRESS",
+      "ADDR"
+    ],
+    "type": "ADDRESS_LINE",
+    "validation": "REGEX",
+    "validation_type": "REGEX"
+  },
+  "Shareholder ID Number": {
+    "description": "Validation: SA_ID_NUMBER. The ID number of the shareholder matched against the algorithm for SA ID numbers(SA_ID_NUMBER)",
+    "required": true,
+    "slug": [
+      "SHAREHOLDER_ID_NUMBER",
+      "ID_NUMBER",
+      "ID"
+    ],
+    "type": "SHAREHOLDER_ID_NUMBER",
+    "validation": "SA_ID_NUMBER",
+    "validation_type": "SA_ID_NUMBER"
+  },
+  "Shareholder Number": {
+    "description": "Matches a shareholder number with optional 1\u00e2\u20ac\u201c3 uppercase letter prefix followed by 6\u00e2\u20ac\u201c13 digits. Examples include \u00272000075336936\u0027, \u0027C0063752643\u0027, \u0027U0075202450\u0027, or \u0027YY0042786\u0027.",
+    "regex": "^[A-Z]{0,3}\\d{6,13}$",
+    "required": true,
+    "slug": [
+      "SHAREHOLDER_NUMBER"
+    ],
+    "type": "SHAREHOLDER_NUMBER",
+    "validation": "REGEX",
+    "validation_type": "REGEX"
+  }
+}</code></pre>
+    
+    <h2>Next Steps</h2>
+    <p>The field mapping has been generated and saved to <code>C:\xampp\htdocs\DocTypeGen\output\41c7a0579c0beff3d99fd1d3efae10ffc02bcf6ce30cc84847200c5703ae50cf\mappings\41c7a0579c0beff3d99fd1d3efae10ffc02bcf6ce30cc84847200c5703ae50cf_mapping.json</code>.</p>
+    
+    
+    <p>All schema fields have been mapped to columns.</p>
+    
+    
+    <p>You can now proceed to generate HTML files by running the <code>html</code> command.</p>
+</div>
+
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>Document Processing System &copy; </p>
+            <p>Generated at 2025-04-14 20:13:53</p>
+        </div>
+    </footer>
+    
+    
+</body>
+</html>

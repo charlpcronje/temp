@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Row 40 Validation</title>
+    
+    <!-- Light and dark mode CSS -->
+    <link id="lightCss" rel="stylesheet" href="assets/style.css">
+    <link id="darkCss" rel="stylesheet" href="assets/dark-style.css" disabled>
+    
+    <script>
+        // Check for user preference and local storage setting
+        function setTheme() {
+            const darkMode = localStorage.getItem('darkMode') === 'true' || 
+                             (localStorage.getItem('darkMode') === null && 
+                              window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            
+            if (darkMode) {
+                document.getElementById('lightCss').disabled = true;
+                document.getElementById('darkCss').disabled = false;
+                document.documentElement.classList.add('dark-mode');
+                if (document.getElementById('themeToggle')) {
+                    document.getElementById('themeToggle').checked = true;
+                }
+            } else {
+                document.getElementById('lightCss').disabled = false;
+                document.getElementById('darkCss').disabled = true;
+                document.documentElement.classList.remove('dark-mode');
+                if (document.getElementById('themeToggle')) {
+                    document.getElementById('themeToggle').checked = false;
+                }
+            }
+        }
+        
+        // Toggle between light and dark mode
+        function toggleTheme() {
+            const isDarkMode = document.getElementById('darkCss').disabled === false;
+            localStorage.setItem('darkMode', !isDarkMode);
+            setTheme();
+        }
+        
+        // Set initial theme
+        document.addEventListener('DOMContentLoaded', setTheme);
+    </script>
+    
+    
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>Row 40 Validation - payment_advice</h1>
+                
+                
+                <div class="theme-toggle">
+                    <label class="switch">
+                        <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="toggle-label">Dark Mode</span>
+                </div>
+                
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="javascript:history.back()">Back</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        
+<div class="report">
+    <div class="report-header">
+        <div class="info-box">
+            <p><strong>Execution ID:</strong> 20da245d</p>
+            <p><strong>Session Hash:</strong> 41c7a0579c0beff3d99fd1d3efae10ffc02bcf6ce30cc84847200c5703ae50cf</p>
+            <p><strong>Generated:</strong> 2025-04-15 12:07:01</p>
+            <p><strong>Row:</strong> 40</p>
+        </div>
+    </div>
+    
+    <h2>Row Validation Results</h2>
+    <div class="summary-boxes">
+        <div class="summary-box total">
+            <h2>12</h2>
+            <p>Total Fields</p>
+        </div>
+        <div class="summary-box success">
+            <h2>11</h2>
+            <p>Valid Fields</p>
+        </div>
+        <div class="summary-box failed">
+            <h2>1</h2>
+            <p>Invalid Fields</p>
+        </div>
+        <div class="summary-box rate">
+            <h2>91.7%</h2>
+            <p>Success Rate</p>
+        </div>
+    </div>
+    
+    <h2>Field Details</h2>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Column</th>
+                    <th>Value</th>
+                    <th>Expected</th>
+                    <th>Status</th>
+                    <th>Errors</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr class="invalid">
+                    <td>BANK_NAME</td>
+                    <td>Missing</td>
+                    <td>Empty</td>
+                    <td>N/A</td>
+                    <td>MISSING_COLUMN</td>
+                    <td>
+                        
+                        <ul class="error-list">
+                            
+                            <li>Required field has no matching column</li>
+                            
+                        </ul>
+                        
+                    </td>
+                </tr>
+                
+                <tr class="valid">
+                    <td>COMPANY_NAME</td>
+                    <td>Company Name</td>
+                    <td>SASOL LIMITED</td>
+                    <td>N/A</td>
+                    <td>MATCH</td>
+                    <td>
+                        
+                        None
+                        
+                    </td>
+                </tr>
+                
+                <tr class="valid">
+                    <td>SHAREHOLDER_ID_NUMBER</td>
+                    <td>Shareholder ID Number</td>
+                    <td>7710300255087</td>
+                    <td>N/A</td>
+                    <td>MATCH</td>
+                    <td>
+                        
+                        None
+                        
+                    </td>
+                </tr>
+                
+                <tr class="valid">
+                    <td>SHAREHOLDER_NUMBER</td>
+                    <td>Shareholder Number</td>
+                    <td>2000075322111</td>
+                    <td>N/A</td>
+                    <td>MATCH</td>
+                    <td>
+                        
+                        None
+                        
+                    </td>
+                </tr>
+                
+                <tr class="valid">
+                    <td>SHAREHOLDER_FULL_NAME</td>
+                    <td>Bank Name</td>
+                    <td>DISCOVERY</td>
+                    <td>N/A</td>
+                    <td>MATCH</td>
+                    <td>
+                        
+                        None
+                        
+                    </td>
+                </tr>
+                
+                <tr class="valid">
+                    <td>ADDRESS_LINE</td>
+                    <td>Shareholder Full Name</td>
+                    <td>NONKULULEKO JEOQUELINE NOMPUMELELO MSIBI</td>
+                    <td>N/A</td>
+                    <td>MATCH</td>
+                    <td>
+                        
+                        None
+                        
+                    </td>
+                </tr>
+                
+                <tr class="valid">
+                    <td>SA_POSTAL_CODE</td>
+                    <td>Postal Code</td>
+                    <td>2191</td>
+                    <td>N/A</td>
+                    <td>MATCH</td>
+                    <td>
+                        
+                        None
+                        
+                    </td>
+                </tr>
+                
+                <tr class="valid">
+                    <td>DOMICILE_CODE</td>
+                    <td>Domicile Code</td>
+                    <td>Empty</td>
+                    <td>N/A</td>
+                    <td>MATCH</td>
+                    <td>
+                        
+                        None
+                        
+                    </td>
+                </tr>
+                
+                <tr class="valid">
+                    <td>PAYMENT_DATE</td>
+                    <td>Payment Date</td>
+                    <td>07/03/2025</td>
+                    <td>N/A</td>
+                    <td>MATCH</td>
+                    <td>
+                        
+                        None
+                        
+                    </td>
+                </tr>
+                
+                <tr class="valid">
+                    <td>AMOUNT_PAID</td>
+                    <td>Amount Paid</td>
+                    <td>545.36</td>
+                    <td>N/A</td>
+                    <td>MATCH</td>
+                    <td>
+                        
+                        None
+                        
+                    </td>
+                </tr>
+                
+                <tr class="valid">
+                    <td>BANK_ACCOUNT_NUMBER</td>
+                    <td>Bank Account Number</td>
+                    <td>*********8902</td>
+                    <td>N/A</td>
+                    <td>MATCH</td>
+                    <td>
+                        
+                        None
+                        
+                    </td>
+                </tr>
+                
+                <tr class="valid">
+                    <td>PAYMENT_REFERENCE</td>
+                    <td>Payment Reference</td>
+                    <td>2000075322111</td>
+                    <td>N/A</td>
+                    <td>MATCH</td>
+                    <td>
+                        
+                        None
+                        
+                    </td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <h2>Next Steps</h2>
+    <p>
+        <a href="validate_20da245d.html" class="button">Back to Validation Summary</a>
+    </p>
+</div>
+
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>Document Processing System &copy; </p>
+            <p>Generated at 2025-04-15 12:07:01</p>
+        </div>
+    </footer>
+    
+    
+</body>
+</html>

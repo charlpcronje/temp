@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Report</title>
+    
+    <!-- Light and dark mode CSS -->
+    <link id="lightCss" rel="stylesheet" href="assets/style.css">
+    <link id="darkCss" rel="stylesheet" href="assets/dark-style.css" disabled>
+    
+    <script>
+        // Check for user preference and local storage setting
+        function setTheme() {
+            const darkMode = localStorage.getItem('darkMode') === 'true' || 
+                             (localStorage.getItem('darkMode') === null && 
+                              window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            
+            if (darkMode) {
+                document.getElementById('lightCss').disabled = true;
+                document.getElementById('darkCss').disabled = false;
+                document.documentElement.classList.add('dark-mode');
+                if (document.getElementById('themeToggle')) {
+                    document.getElementById('themeToggle').checked = true;
+                }
+            } else {
+                document.getElementById('lightCss').disabled = false;
+                document.getElementById('darkCss').disabled = true;
+                document.documentElement.classList.remove('dark-mode');
+                if (document.getElementById('themeToggle')) {
+                    document.getElementById('themeToggle').checked = false;
+                }
+            }
+        }
+        
+        // Toggle between light and dark mode
+        function toggleTheme() {
+            const isDarkMode = document.getElementById('darkCss').disabled === false;
+            localStorage.setItem('darkMode', !isDarkMode);
+            setTheme();
+        }
+        
+        // Set initial theme
+        document.addEventListener('DOMContentLoaded', setTheme);
+    </script>
+    
+    
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>Import Report</h1>
+                
+                
+                <div class="theme-toggle">
+                    <label class="switch">
+                        <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="toggle-label">Dark Mode</span>
+                </div>
+                
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="javascript:history.back()">Back</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        
+<div class="report">
+    <div class="report-header">
+        <div class="info-box">
+            <p><strong>Execution ID:</strong> 0a051e87</p>
+            <p><strong>Session Hash:</strong> 41c7a0579c0beff3d99fd1d3efae10ffc02bcf6ce30cc84847200c5703ae50cf</p>
+            <p><strong>Generated:</strong> 2025-04-14 19:29:12</p>
+            <p><strong>Created At:</strong> 2025-04-14 19:29:12</p>
+        </div>
+    </div>
+    
+    <h2>Import Summary</h2>
+    <div class="summary-boxes">
+        <div class="summary-box total">
+            <h2>221</h2>
+            <p>Total Rows</p>
+        </div>
+        <div class="summary-box success">
+            <h2>16</h2>
+            <p>Columns</p>
+        </div>
+        <div class="summary-box">
+            <h2>imported_41c7a0579c</h2>
+            <p>Table Name</p>
+        </div>
+    </div>
+    
+    <h2>File Information</h2>
+    <table class="data-table">
+        <tr>
+            <th>File Name</th>
+            <td>q.xlsx</td>
+        </tr>
+        <tr>
+            <th>File Path</th>
+            <td>C:\Users\charl\AppData\Local\Temp\tmp2js7d1as\q.xlsx</td>
+        </tr>
+        <tr>
+            <th>Table Name</th>
+            <td>imported_41c7a0579c</td>
+        </tr>
+        <tr>
+            <th>Row Count</th>
+            <td>221</td>
+        </tr>
+        <tr>
+            <th>Column Count</th>
+            <td>16</td>
+        </tr>
+    </table>
+    
+    <h2>Encoding Information</h2>
+    <table class="data-table">
+        <tr>
+            <th>Encoding Converted</th>
+            <td>No</td>
+        </tr>
+        
+        <tr>
+            <th>Current Encoding</th>
+            <td>utf-8</td>
+        </tr>
+        <tr>
+            <th>Note</th>
+            <td>File was already in UTF-8 format with Unix line endings (LF) or no conversion was needed.</td>
+        </tr>
+        
+    </table>
+    
+    <h2>Columns</h2>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Column Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td>1</td>
+                    <td>Company Name</td>
+                </tr>
+                
+                <tr>
+                    <td>2</td>
+                    <td>Shareholder ID Number</td>
+                </tr>
+                
+                <tr>
+                    <td>3</td>
+                    <td>Shareholder Number</td>
+                </tr>
+                
+                <tr>
+                    <td>4</td>
+                    <td>Shareholder Full Name</td>
+                </tr>
+                
+                <tr>
+                    <td>5</td>
+                    <td>Address 1</td>
+                </tr>
+                
+                <tr>
+                    <td>6</td>
+                    <td>Address 2</td>
+                </tr>
+                
+                <tr>
+                    <td>7</td>
+                    <td>Address 3</td>
+                </tr>
+                
+                <tr>
+                    <td>8</td>
+                    <td>Address 4</td>
+                </tr>
+                
+                <tr>
+                    <td>9</td>
+                    <td>Address 5</td>
+                </tr>
+                
+                <tr>
+                    <td>10</td>
+                    <td>Postal Code</td>
+                </tr>
+                
+                <tr>
+                    <td>11</td>
+                    <td>Domicile Code</td>
+                </tr>
+                
+                <tr>
+                    <td>12</td>
+                    <td>Payment Date</td>
+                </tr>
+                
+                <tr>
+                    <td>13</td>
+                    <td>Amount Paid</td>
+                </tr>
+                
+                <tr>
+                    <td>14</td>
+                    <td>Bank Name</td>
+                </tr>
+                
+                <tr>
+                    <td>15</td>
+                    <td>Bank Account Number</td>
+                </tr>
+                
+                <tr>
+                    <td>16</td>
+                    <td>Payment Reference</td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <h2>Sample Data</h2>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Row #</th>
+                    
+                    <th>Company Name</th>
+                    
+                    <th>Shareholder ID Number</th>
+                    
+                    <th>Shareholder Number</th>
+                    
+                    <th>Shareholder Full Name</th>
+                    
+                    <th>Address 1</th>
+                    
+                    <th>Address 2</th>
+                    
+                    <th>Address 3</th>
+                    
+                    <th>Address 4</th>
+                    
+                    <th>Address 5</th>
+                    
+                    <th>Postal Code</th>
+                    
+                    <th>Domicile Code</th>
+                    
+                    <th>Payment Date</th>
+                    
+                    <th>Amount Paid</th>
+                    
+                    <th>Bank Name</th>
+                    
+                    <th>Bank Account Number</th>
+                    
+                    <th>Payment Reference</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td>1</td>
+                    
+                    <td>OLD MUTUAL LIMITED</td>
+                    
+                    <td>4806235037187</td>
+                    
+                    <td>1524168204</td>
+                    
+                    <td>HORST D KEIL</td>
+                    
+                    <td>10 WESLEY HILL STREET</td>
+                    
+                    <td>5 WESLEY HEIGHTS</td>
+                    
+                    <td>WESTBANK</td>
+                    
+                    <td>PORT ALFRED</td>
+                    
+                    <td></td>
+                    
+                    <td>6170</td>
+                    
+                    <td></td>
+                    
+                    <td>07/03/2025</td>
+                    
+                    <td>1337</td>
+                    
+                    <td>CAPITEC BANK                  </td>
+                    
+                    <td>*********6960</td>
+                    
+                    <td>1524168204/OML</td>
+                    
+                </tr>
+                
+                <tr>
+                    <td>2</td>
+                    
+                    <td>OLD MUTUAL LIMITED</td>
+                    
+                    <td>4103055113086</td>
+                    
+                    <td>1520641161</td>
+                    
+                    <td>E/L HASSAN DAWOOD OSMAN</td>
+                    
+                    <td>C/O AYESHA HASSAN OSMAN</td>
+                    
+                    <td>786 EISLEBEN DRIVE</td>
+                    
+                    <td>WELTEVREDEN GLEN</td>
+                    
+                    <td>MITCHELLS PLAIN</td>
+                    
+                    <td></td>
+                    
+                    <td>7785</td>
+                    
+                    <td></td>
+                    
+                    <td>07/03/2025</td>
+                    
+                    <td>570.4</td>
+                    
+                    <td>ABSA BANK                     </td>
+                    
+                    <td>*********0609</td>
+                    
+                    <td>1520641161/OML</td>
+                    
+                </tr>
+                
+                <tr>
+                    <td>3</td>
+                    
+                    <td>OLD MUTUAL LIMITED</td>
+                    
+                    <td>9012310253089</td>
+                    
+                    <td>1574249599</td>
+                    
+                    <td>ZANELE LORRAINE HAPPY STOLE</td>
+                    
+                    <td>34 GIBSON STREET</td>
+                    
+                    <td>JOHANNESBURG</td>
+                    
+                    <td>TRIOMF</td>
+                    
+                    <td></td>
+                    
+                    <td></td>
+                    
+                    <td>2092</td>
+                    
+                    <td></td>
+                    
+                    <td>07/03/2025</td>
+                    
+                    <td>558</td>
+                    
+                    <td>CAPITEC BANK                  </td>
+                    
+                    <td>*********2859</td>
+                    
+                    <td>1574249599/OML</td>
+                    
+                </tr>
+                
+                <tr>
+                    <td>4</td>
+                    
+                    <td>OLD MUTUAL LIMITED</td>
+                    
+                    <td>5409050009081   </td>
+                    
+                    <td>1524366571</td>
+                    
+                    <td>JILL DOROTHY LAYTON-MC CANN</td>
+                    
+                    <td>53 ISLAND VIEW</td>
+                    
+                    <td>LA PALOMA</td>
+                    
+                    <td></td>
+                    
+                    <td></td>
+                    
+                    <td></td>
+                    
+                    <td>7441</td>
+                    
+                    <td></td>
+                    
+                    <td>07/03/2025</td>
+                    
+                    <td>173.96</td>
+                    
+                    <td>ABSA BANK                     </td>
+                    
+                    <td>*********6526</td>
+                    
+                    <td>1524366571/OML</td>
+                    
+                </tr>
+                
+                <tr>
+                    <td>5</td>
+                    
+                    <td>OLD MUTUAL PLC</td>
+                    
+                    <td>6912040370082</td>
+                    
+                    <td>1550036709</td>
+                    
+                    <td>DIKELEDI R MAOKA</td>
+                    
+                    <td>2182 STAND</td>
+                    
+                    <td>NEWMARK ESTATE</td>
+                    
+                    <td></td>
+                    
+                    <td></td>
+                    
+                    <td></td>
+                    
+                    <td>0001</td>
+                    
+                    <td></td>
+                    
+                    <td>07/03/2025</td>
+                    
+                    <td>114.9</td>
+                    
+                    <td>ABSA BANK                     </td>
+                    
+                    <td>*********6958</td>
+                    
+                    <td>1550036709/OMPLC</td>
+                    
+                </tr>
+                
+                <tr>
+                    <td>6</td>
+                    
+                    <td>OLD MUTUAL PLC</td>
+                    
+                    <td>5611135039088</td>
+                    
+                    <td>1554695675</td>
+                    
+                    <td>RADFORD J MARILLIER</td>
+                    
+                    <td>4 MUSCADEL ROAD</td>
+                    
+                    <td>BELLVILLE</td>
+                    
+                    <td></td>
+                    
+                    <td></td>
+                    
+                    <td></td>
+                    
+                    <td>7530</td>
+                    
+                    <td></td>
+                    
+                    <td>07/03/2025</td>
+                    
+                    <td>83.08</td>
+                    
+                    <td>CAPITEC BANK                  </td>
+                    
+                    <td>*********2790</td>
+                    
+                    <td>1554695675/OMPLC</td>
+                    
+                </tr>
+                
+                <tr>
+                    <td>7</td>
+                    
+                    <td>OLD MUTUAL PLC</td>
+                    
+                    <td>7205075267086</td>
+                    
+                    <td>1545167819</td>
+                    
+                    <td>GODFREY DE WEE</td>
+                    
+                    <td>41 THERON STREET</td>
+                    
+                    <td>DE AAR CENTRAL</td>
+                    
+                    <td>DE AAR</td>
+                    
+                    <td></td>
+                    
+                    <td></td>
+                    
+                    <td>7009</td>
+                    
+                    <td></td>
+                    
+                    <td>07/03/2025</td>
+                    
+                    <td>62.31</td>
+                    
+                    <td>CAPITEC BANK                  </td>
+                    
+                    <td>*********5190</td>
+                    
+                    <td>1545167819/OMPLC</td>
+                    
+                </tr>
+                
+                <tr>
+                    <td>8</td>
+                    
+                    <td>OLD MUTUAL PLC</td>
+                    
+                    <td>7307175563081   </td>
+                    
+                    <td>1552313282</td>
+                    
+                    <td>PETER IM RAMPETE</td>
+                    
+                    <td>3398 KAGISO AVENUE</td>
+                    
+                    <td>HILLVIEW</td>
+                    
+                    <td></td>
+                    
+                    <td></td>
+                    
+                    <td></td>
+                    
+                    <td>1754</td>
+                    
+                    <td></td>
+                    
+                    <td>07/03/2025</td>
+                    
+                    <td>62.31</td>
+                    
+                    <td>NEDBANK LIMITED               </td>
+                    
+                    <td>*********1553</td>
+                    
+                    <td>1552313282/OMPLC</td>
+                    
+                </tr>
+                
+                <tr>
+                    <td>9</td>
+                    
+                    <td>QUILTER PLC</td>
+                    
+                    <td>4103055113086</td>
+                    
+                    <td>1520641161</td>
+                    
+                    <td>ESTATE LATE HASSAN DAWOOD OSMAN</td>
+                    
+                    <td>C/O AYESHA HASSAN OSMAN</td>
+                    
+                    <td>786 EISLEBEN DRIVE</td>
+                    
+                    <td>WELTEVREDEN GLEN</td>
+                    
+                    <td>MITCHELLS PLAIN</td>
+                    
+                    <td></td>
+                    
+                    <td>7785</td>
+                    
+                    <td></td>
+                    
+                    <td>07/03/2025</td>
+                    
+                    <td>50.26</td>
+                    
+                    <td>ABSA BANK                     </td>
+                    
+                    <td>*********0609</td>
+                    
+                    <td>1520641161/QLT</td>
+                    
+                </tr>
+                
+                <tr>
+                    <td>10</td>
+                    
+                    <td>QUILTER PLC</td>
+                    
+                    <td>4806235037187</td>
+                    
+                    <td>1524168204</td>
+                    
+                    <td>HORST DIETMAR KEIL</td>
+                    
+                    <td>10 WESLEY HILL STREET</td>
+                    
+                    <td>5 WESLEY HEIGHTS</td>
+                    
+                    <td>WESTBANK</td>
+                    
+                    <td>PORT ALFRED</td>
+                    
+                    <td></td>
+                    
+                    <td>6170</td>
+                    
+                    <td></td>
+                    
+                    <td>07/03/2025</td>
+                    
+                    <td>534.26</td>
+                    
+                    <td>CAPITEC BANK                  </td>
+                    
+                    <td>*********6960</td>
+                    
+                    <td>1524168204/QLT</td>
+                    
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <h2>Next Steps</h2>
+    <p>The data has been imported successfully. You can now proceed to validate the data by running the <code>validate</code> command.</p>
+</div>
+
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>Document Processing System &copy; 2025</p>
+            <p>Generated at 2025-04-14 19:29:12</p>
+        </div>
+    </footer>
+    
+    
+</body>
+</html>

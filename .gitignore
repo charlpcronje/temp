@@ -1,14 +1,7 @@
-**/__pycache__/*
-**/.vscode/*
-**/config/*
-output
+
+
 **/node_modules/*
 .history
-auth.db
-**/test/*
 **/public/node_modules/*
-**/output/*
 **/.git/*
-.env
 log.log
-**/output

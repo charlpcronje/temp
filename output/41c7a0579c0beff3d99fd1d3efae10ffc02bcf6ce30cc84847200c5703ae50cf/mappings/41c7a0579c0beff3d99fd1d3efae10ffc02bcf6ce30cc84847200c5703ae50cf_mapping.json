@@ -1,0 +1,166 @@
+{
+  "Company Name": {
+    "type": "COMPANY_NAME",
+    "validation_type": "NONE",
+    "description": "Type not found in schema or invalid mapping",
+    "slug": [
+      "COMPANY_NAME"
+    ],
+    "required": false
+  },
+  "Shareholder ID Number": {
+    "type": "SHAREHOLDER_ID_NUMBER",
+    "validation_type": "NONE",
+    "description": "Type not found in schema or invalid mapping",
+    "slug": [
+      "SHAREHOLDER_ID_NUMBER"
+    ],
+    "required": false
+  },
+  "Shareholder Number": {
+    "type": "SHAREHOLDER_NUMBER",
+    "validation_type": "NONE",
+    "description": "Type not found in schema or invalid mapping",
+    "slug": [
+      "SHAREHOLDER_NUMBER"
+    ],
+    "required": false
+  },
+  "Bank Name": {
+    "type": "SHAREHOLDER_FULL_NAME",
+    "validation_type": "NONE",
+    "description": "Type not found in schema or invalid mapping",
+    "slug": [
+      "SHAREHOLDER_FULL_NAME"
+    ],
+    "required": false
+  },
+  "Postal Code": {
+    "type": "SA_POSTAL_CODE",
+    "validation_type": "NONE",
+    "description": "Type not found in schema or invalid mapping",
+    "slug": [
+      "SA_POSTAL_CODE"
+    ],
+    "required": false
+  },
+  "Domicile Code": {
+    "type": "DOMICILE_CODE",
+    "validation_type": "NONE",
+    "description": "Type not found in schema or invalid mapping",
+    "slug": [
+      "DOMICILE_CODE"
+    ],
+    "required": false
+  },
+  "Payment Date": {
+    "type": "PAYMENT_DATE",
+    "validation_type": "NONE",
+    "description": "Type not found in schema or invalid mapping",
+    "slug": [
+      "PAYMENT_DATE"
+    ],
+    "required": false
+  },
+  "Amount Paid": {
+    "type": "AMOUNT_PAID",
+    "validation_type": "NONE",
+    "description": "Type not found in schema or invalid mapping",
+    "slug": [
+      "AMOUNT_PAID"
+    ],
+    "required": false
+  },
+  "Bank Account Number": {
+    "type": "BANK_ACCOUNT_NUMBER",
+    "validation_type": "NONE",
+    "description": "Type not found in schema or invalid mapping",
+    "slug": [
+      "BANK_ACCOUNT_NUMBER"
+    ],
+    "required": false
+  },
+  "Payment Reference": {
+    "type": "PAYMENT_REFERENCE",
+    "validation_type": "NONE",
+    "description": "Type not found in schema or invalid mapping",
+    "slug": [
+      "PAYMENT_REFERENCE"
+    ],
+    "required": false
+  },
+  "Shareholder Full Name": {
+    "type": "ADDRESS_LINE",
+    "validation_type": "NONE",
+    "description": "Type not found in schema or invalid mapping",
+    "slug": [
+      "ADDRESS_LINE"
+    ],
+    "required": false
+  },
+  "Address 1": {
+    "description": "Validation: REGEX. The shareholder address line 1 to 5",
+    "validate_type": "REGEX",
+    "regex": "^.{2,}$",
+    "required": true,
+    "max_matches": 5,
+    "slug": [
+      "ADDRESS_LINE",
+      "ADDRESS",
+      "ADDR"
+    ],
+    "type": "ADDRESS_LINE"
+  },
+  "Address 2": {
+    "description": "Validation: REGEX. The shareholder address line 1 to 5",
+    "validate_type": "REGEX",
+    "regex": "^.{2,}$",
+    "required": true,
+    "max_matches": 5,
+    "slug": [
+      "ADDRESS_LINE",
+      "ADDRESS",
+      "ADDR"
+    ],
+    "type": "ADDRESS_LINE"
+  },
+  "Address 3": {
+    "description": "Validation: REGEX. The shareholder address line 1 to 5",
+    "validate_type": "REGEX",
+    "regex": "^.{2,}$",
+    "required": true,
+    "max_matches": 5,
+    "slug": [
+      "ADDRESS_LINE",
+      "ADDRESS",
+      "ADDR"
+    ],
+    "type": "ADDRESS_LINE"
+  },
+  "Address 4": {
+    "description": "Validation: REGEX. The shareholder address line 1 to 5",
+    "validate_type": "REGEX",
+    "regex": "^.{2,}$",
+    "required": true,
+    "max_matches": 5,
+    "slug": [
+      "ADDRESS_LINE",
+      "ADDRESS",
+      "ADDR"
+    ],
+    "type": "ADDRESS_LINE"
+  },
+  "Address 5": {
+    "description": "Validation: REGEX. The shareholder address line 1 to 5",
+    "validate_type": "REGEX",
+    "regex": "^.{2,}$",
+    "required": true,
+    "max_matches": 5,
+    "slug": [
+      "ADDRESS_LINE",
+      "ADDRESS",
+      "ADDR"
+    ],
+    "type": "ADDRESS_LINE"
+  }
+}
