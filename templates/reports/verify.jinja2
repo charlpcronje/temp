@@ -1,0 +1,162 @@
+{% extends "base.jinja2" %}
+
+{% set active_report = "verify" %}
+{% set title = "Lookup Verification Report" %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div>Lookup Resolution Status</div>
+        <div>Report Date: {{ report_date }}</div>
+    </div>
+    <div class="card-body">
+        <p>This report verifies how imported records were matched to users in the system.</p>
+
+        {% if lookups and lookups.summary %}
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Matched Records</div>
+                <div class="value">{{ lookups.summary.matched_count|default(0) }}</div>
+                <div class="description">Records with a unique user match</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Unmatched Records</div>
+                <div class="value">{{ lookups.summary.unmatched_count|default(0) }}</div>
+                <div class="description">Records without a user match</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Ambiguous Matches</div>
+                <div class="value">{{ lookups.summary.ambiguous_count|default(0) }}</div>
+                <div class="description">Records with multiple potential matches</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Total Processing Time</div>
+                <div class="value">{{ lookups.summary.processing_time|default(0) }} sec</div>
+                <div class="description">Time to complete lookup resolution</div>
+            </div>
+        </div>
+        {% else %}
+        <div class="status status-warning">⚠️ No Lookup Data Available</div>
+        <p>Lookup resolution has not been performed for this session yet.</p>
+        <p>Run the <code>resolve_lookups</code> command to match records to users.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div>Lookup Configuration</div>
+    </div>
+    <div class="card-body">
+        {% if lookups and lookups.config %}
+        <h3>Matching Rules</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Priority</th>
+                    <th>Field Type</th>
+                    <th>Target Column</th>
+                    <th>Database</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rule in lookups.config.rules %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ rule.field_type }}</td>
+                    <td>{{ rule.target_column }}</td>
+                    <td>{{ rule.database|default("Primary") }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">No matching rules defined</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="status status-warning">⚠️ No Configuration Found</div>
+        <p>Lookup configuration is not available. The system may be using default matching rules.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div>Matched Records</div>
+    </div>
+    <div class="card-body">
+        {% if lookups and lookups.matches %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Row ID</th>
+                    <th>Matched User ID</th>
+                    <th>Match Method</th>
+                    <th>Match Fields</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row_id, match in lookups.matches.items() %}
+                {% if match.matched_user_id and not match.ambiguous %}
+                <tr>
+                    <td>{{ row_id }}</td>
+                    <td>{{ match.matched_user_id }}</td>
+                    <td>{{ match.match_method }}</td>
+                    <td>{{ match.match_fields|join(", ") }}</td>
+                    <td>
+                        <span class="status status-success">✓ Matched</span>
+                    </td>
+                </tr>
+                {% endif %}
+                {% else %}
+                <tr>
+                    <td colspan="5">No matched records found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No lookup data available. Run the <code>resolve_lookups</code> command to generate matching data.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div>Next Steps</div>
+    </div>
+    <div class="card-body">
+        {% if lookups and lookups.summary %}
+        
+        {% if lookups.summary.unmatched_count > 0 or lookups.summary.ambiguous_count > 0 %}
+        <div class="status status-warning">⚠️ Lookup Resolution Incomplete</div>
+        <p>There are unresolved lookups that need attention:</p>
+        <ul>
+            {% if lookups.summary.unmatched_count > 0 %}
+            <li>{{ lookups.summary.unmatched_count }} records couldn't be matched to any user</li>
+            {% endif %}
+            {% if lookups.summary.ambiguous_count > 0 %}
+            <li>{{ lookups.summary.ambiguous_count }} records have ambiguous matches (multiple possible users)</li>
+            {% endif %}
+        </ul>
+        <p>See the <a href="exceptions.html">Exceptions Report</a> for details and resolution options.</p>
+        
+        {% else %}
+        <div class="status status-success">✅ All Records Matched</div>
+        <p>All records have been successfully matched to users. The system is ready for document generation.</p>
+        <p>Next steps:</p>
+        <ul>
+            <li>Run the <code>html</code> command to generate HTML documents</li>
+            <li>Run the <code>pdf</code> command to generate PDF documents</li>
+        </ul>
+        {% endif %}
+        
+        {% else %}
+        <div class="status status-error">❌ Lookup Resolution Required</div>
+        <p>Lookup resolution has not been performed yet. Run the <code>resolve_lookups</code> command to match records to users.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

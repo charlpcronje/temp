@@ -1,0 +1,183 @@
+{% extends "base.jinja2" %}
+
+{% set active_report = "mapping" %}
+{% set title = "Field Mapping Report" %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div>Column to Field Type Mapping</div>
+        <div>Report Date: {{ report_date }}</div>
+    </div>
+    <div class="card-body">
+        <p>This report shows how source columns were mapped to field types in the system.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Source Column</th>
+                    <th>Mapped Type</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if dataset.mapping and dataset.mapping.column_types %}
+                {% for column, type in dataset.mapping.column_types.items() %}
+                <tr>
+                    <td>{{ column }}</td>
+                    <td>{{ type }}</td>
+                    <td>
+                        <span class="status status-success">✓ Mapped</span>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                {% for column in dataset.columns %}
+                <tr>
+                    <td>{{ column }}</td>
+                    <td>Unknown</td>
+                    <td>
+                        <span class="status status-warning">⚠️ Not Mapped</span>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div>Mapping File Status</div>
+    </div>
+    <div class="card-body">
+        {% if dataset.mapping %}
+        <div class="status status-success">✅ Mapping File Found</div>
+        <p>The mapping file has been generated and contains {{ dataset.mapping.column_types|length }} mapped columns.</p>
+        
+        <h3>Mapping Summary</h3>
+        <table>
+            <tr>
+                <th>Document Type</th>
+                <td>{{ dataset.mapping.document_type|default("Unknown") }}</td>
+            </tr>
+            <tr>
+                <th>Schema Match Confidence</th>
+                <td>{{ dataset.mapping.match_confidence|default("Unknown") }}</td>
+            </tr>
+            <tr>
+                <th>Mapped Columns</th>
+                <td>{{ dataset.mapping.column_types|length }}</td>
+            </tr>
+            {% if dataset.mapping.modified %}
+            <tr>
+                <th>Manually Modified</th>
+                <td>Yes - The mapping file has been edited manually</td>
+            </tr>
+            {% endif %}
+        </table>
+        
+        {% if dataset.mapping.unmapped_columns %}
+        <h3>Unmapped Columns</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Column Name</th>
+                    <th>Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for column in dataset.mapping.unmapped_columns %}
+                <tr>
+                    <td>{{ column.name }}</td>
+                    <td>{{ column.reason|default("Unknown type") }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+        
+        {% else %}
+        <div class="status status-error">❌ No Mapping File Found</div>
+        <p>No mapping file was generated for this session. This indicates an issue with the validation phase.</p>
+        <p>Recommendations:</p>
+        <ul>
+            <li>Run the <code>map</code> command to generate a mapping file</li>
+            <li>Verify that the document type can be detected from the imported data</li>
+            <li>Check for validation errors in the imported data</li>
+        </ul>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div>Data Source Information</div>
+    </div>
+    <div class="card-body">
+        <h3>Dataset Structure</h3>
+        <table>
+            <tr>
+                <th>Total Columns</th>
+                <td>{{ dataset.columns|length }}</td>
+            </tr>
+            <tr>
+                <th>Total Rows</th>
+                <td>{{ dataset.total_rows }}</td>
+            </tr>
+            <tr>
+                <th>Source Table</th>
+                <td><span class="mono">{{ snapshot_table|default("Unknown") }}</span></td>
+            </tr>
+        </table>
+        
+        <h3>Column List</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Column Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for column in dataset.columns %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ column }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div>Next Steps</div>
+    </div>
+    <div class="card-body">
+        {% if dataset.mapping and dataset.mapping.unmapped_columns %}
+        <div class="status status-warning">⚠️ Mapping Incomplete</div>
+        <p>There are {{ dataset.mapping.unmapped_columns|length }} columns that couldn't be mapped to known field types.</p>
+        <p>Recommendations:</p>
+        <ul>
+            <li>Review the unmapped columns and manually edit the mapping file if needed</li>
+            <li>Check if the correct document type was detected</li>
+            <li>Consider adding the unmapped columns to the schema definition if they're important</li>
+        </ul>
+        {% elif not dataset.mapping %}
+        <div class="status status-error">❌ Mapping Required</div>
+        <p>No mapping file exists. Generate a mapping file to proceed.</p>
+        {% else %}
+        <div class="status status-success">✅ Mapping Complete</div>
+        <p>All columns have been successfully mapped to field types.</p>
+        <p>Recommendations:</p>
+        <ul>
+            <li>Continue to the <a href="verify.html">Verify Report</a> to check lookup resolutions</li>
+            <li>Run the <code>html</code> and <code>pdf</code> commands if not already done</li>
+        </ul>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

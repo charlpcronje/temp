@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Import Report{% endblock %}
+
+{% block header_title %}Import Report{% endblock %}
+
+{% block content %}
+<div class="report">
+    <div class="report-header">
+        <div class="info-box">
+            <p><strong>Execution ID:</strong> {{ execution_id }}</p>
+            <p><strong>Session Hash:</strong> {{ session_hash }}</p>
+            <p><strong>Generated:</strong> {{ generated_at }}</p>
+            <p><strong>Created At:</strong> {{ created_at }}</p>
+        </div>
+    </div>
+    
+    <h2>Import Summary</h2>
+    <div class="summary-boxes">
+        <div class="summary-box total">
+            <h2>{{ num_rows }}</h2>
+            <p>Total Rows</p>
+        </div>
+        <div class="summary-box success">
+            <h2>{{ columns|length }}</h2>
+            <p>Columns</p>
+        </div>
+        <div class="summary-box">
+            <h2>{{ table_name }}</h2>
+            <p>Table Name</p>
+        </div>
+    </div>
+    
+    <h2>File Information</h2>
+    <table class="data-table">
+        <tr>
+            <th>File Name</th>
+            <td>{{ file_name }}</td>
+        </tr>
+        <tr>
+            <th>File Path</th>
+            <td>{{ file_path }}</td>
+        </tr>
+        <tr>
+            <th>Table Name</th>
+            <td>{{ table_name }}</td>
+        </tr>
+        <tr>
+            <th>Row Count</th>
+            <td>{{ num_rows }}</td>
+        </tr>
+        <tr>
+            <th>Column Count</th>
+            <td>{{ columns|length }}</td>
+        </tr>
+    </table>
+    
+    <h2>Encoding Information</h2>
+    <table class="data-table">
+        <tr>
+            <th>Encoding Converted</th>
+            <td>{% if encoding_converted %}Yes{% else %}No{% endif %}</td>
+        </tr>
+        {% if encoding_converted %}
+        <tr>
+            <th>Original Encoding</th>
+            <td>{{ original_encoding }}</td>
+        </tr>
+        <tr>
+            <th>New Encoding</th>
+            <td>{{ new_encoding }}</td>
+        </tr>
+        <tr>
+            <th>Line Ending Changes</th>
+            <td>{{ line_ending_changes }} line endings converted from CRLF to LF</td>
+        </tr>
+        <tr>
+            <th>Note</th>
+            <td><strong>All document files are automatically converted to UTF-8 encoding with Unix line endings (LF) before processing.</strong> This ensures consistent processing and avoids encoding-related issues.</td>
+        </tr>
+        {% else %}
+        <tr>
+            <th>Current Encoding</th>
+            <td>{{ original_encoding|default('utf-8') }}</td>
+        </tr>
+        <tr>
+            <th>Note</th>
+            <td>File was already in UTF-8 format with Unix line endings (LF) or no conversion was needed.</td>
+        </tr>
+        {% endif %}
+    </table>
+    
+    <h2>Columns</h2>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Column Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for column in columns %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ column }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <h2>Sample Data</h2>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Row #</th>
+                    {% for column in columns %}
+                    <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in sample_data %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    {% for column in columns %}
+                    <td>{{ row[column]|default('') }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <h2>Next Steps</h2>
+    <p>The data has been imported successfully. You can now proceed to validate the data by running the <code>validate</code> command.</p>
+</div>
+{% endblock %}

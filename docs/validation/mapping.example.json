@@ -1,0 +1,100 @@
+{
+    "Company Name": {
+      "type": "COMPANY_NAME",
+      "validation_type": "LEV_DISTANCE",
+      "list": "COMPANY_NAME",
+      "distance": 80,
+      "required": true,
+      "description": "Validation: LEV_DISTANCE. The company matched against the list of companies with 80% similarity",
+      "slug": ["COMPANY_NAME"]
+    },
+    "Shareholder ID Number": {
+      "type": "SHAREHOLDER_ID_NUMBER",
+      "validation_type": "SA_ID_NUMBER",
+      "required": true,
+      "description": "Validation: SA_ID_NUMBER. The ID number of the shareholder matched against the algorithm for SA ID numbers(SA_ID_NUMBER)",
+      "slug": ["SHAREHOLDER_ID_NUMBER"]
+    },
+    "Shareholder Number": {
+      "type": "SHAREHOLDER_NUMBER",
+      "validation_type": "REGEX",
+      "regex": "^\\d{13}$",
+      "required": true,
+      "description": "Validation: REGEX. The shareholder number of the",
+      "slug": ["SHAREHOLDER_NUMBER"]
+    },
+    "Shareholder Full Name": {
+      "type": "SHAREHOLDER_FULL_NAME",
+      "validation_type": "REGEX",
+      "regex": "^([A-Z][a-z''\\-]+)(\\s+[A-Z][a-z''\\-]+)+$",
+      "required": true,
+      "description": "Validation: REGEX. The shareholder full name of the",
+      "slug": ["SHAREHOLDER_FULL_NAME", "FULL_NAME"]
+    },
+    "Address 1": {
+      "type": "ADDRESS_LINE",
+      "validation_type": "VALUE_IN_GROUP",
+      "description": "Validation: VALUE_IN_GROUP. At least one of the address lines must have a value",
+      "slug": [
+          "ADDRESS_1", "ADDRESS1",
+          "ADDRESS_2", "ADDRESS2", 
+          "ADDRESS_3", "ADDRESS3",
+          "ADDRESS_4", "ADDRESS4", 
+          "ADDRESS_5", "ADDRESS5"
+      ]
+    },
+    "Postal Code": {
+      "type": "POSTAL_CODE",
+      "validation_type": "REGEX",
+      "regex": "^.{2,}$",
+      "description": "Validation: REGEX. Check if it is a valid postal code",
+      "slug": ["POSTAL_CODE"]
+    },
+    "Domicile Code": {
+      "type": "DOMICILE_CODE",
+      "validation_type": "ENUM",
+      "enum": "COUNTRY_CODE",
+      "required": true,
+      "description": "Validation: ENUM. The domicile code of the shareholder that exists in the COUNTRY_CODE list",
+      "slug": ["DOMICILE_CODE"]
+    },
+    "Payment Date": {
+      "type": "PAYMENT_DATE",
+      "validation_type": "UNIX_DATE",
+      "required": true,
+      "description": "Validation: UNIX_DATE. The payment date of the shareholder",
+      "slug": ["PAYMENT_DATE"]
+    },
+    "Amount Paid": {
+      "type": "AMOUNT_PAID",
+      "validation_type": "DECIMAL_AMOUNT",
+      "required": true,
+      "description": "Validation: DECIMAL_AMOUNT. The amount paid of the shareholder",
+      "slug": ["AMOUNT_PAID"]
+    },
+    "Bank Name": {
+      "type": "BANK_NAME",
+      "validation_type": "LEV_DISTANCE",
+      "list": "BANK_NAME",
+      "distance": 80,
+      "required": true,
+      "description": "Validation: LEV_DISTANCE. The bank name of the shareholder matched against the list of banks with 80% similarity",
+      "slug": ["BANK_NAME"]
+    },
+    "Bank Account Number": {
+      "type": "BANK_ACCOUNT_NUMBER",
+      "validation_type": "BANK_ACCOUNT_NUMBER",
+      "required": true,
+      "description": "Validation: BANK_ACCOUNT_NUMBER. The bank account number of the shareholder",
+      "slug": ["BANK_ACCOUNT_NUMBER"]
+    },
+    "Payment Reference": {
+      "type": "PAYMENT_REFERENCE",
+      "validation_type": "REGEX",
+      "regex": "^\\d{13}$",
+      "required": true,
+      "description": "Validation: REGEX. The payment reference of the shareholder",
+      "slug": ["PAYMENT_REFERENCE"]
+    }
+  }
+  

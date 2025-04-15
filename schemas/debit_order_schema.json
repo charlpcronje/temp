@@ -1,0 +1,199 @@
+{
+  "type": "debit_order",
+  "template": "payment_advice.html",
+  "pass_threshold": 80,
+  "output_doc_name": "{datetime}_{SHAREHOLDER_ID_NUMBER}_debit_order_{PAYMENT_REFERENCE}.{HTML|PDF}",
+  "enums": {
+    "COUNTRY_CODE": [
+      "AF",
+      "AX",
+      "SB",
+      "SO",
+      "ZA",
+      "GS",
+      "SS",
+      "ES"
+    ]
+  },
+  "lists": {
+    "COMPANY_NAME": [
+      {
+        "name": "Remgro Limited",
+        "aliases": [
+          "remgro",
+          "remgro limited"
+        ]
+      },
+      {
+        "name": "Sasol Limited",
+        "aliases": [
+          "sasol",
+          "sasol limited"
+        ]
+      },
+      {
+        "name": "Old Mutual",
+        "aliases": [
+          "oml",
+          "old mutual limited",
+          "OLD MUTUAL PLC"
+        ]
+      },
+      {
+        "name": "Quilter",
+        "aliases": [
+          "qlt",
+          "quilter limited",
+          "QUILTER PLC"
+        ]
+      }
+    ],
+    "BANK_NAME": [
+      {
+        "name": "CAPITEC BANK",
+        "aliases": [
+          "CAPITEC"
+        ]
+      },
+      {
+        "name": "First National Bank",
+        "aliases": [
+          "FNB"
+        ]
+      },
+      {
+        "name": "ABSA BANK",
+        "aliases": [
+          "ABSA"
+        ]
+      },
+      {
+        "name": "NEDBANK LIMITED",
+        "aliases": [
+          "NEDBANK"
+        ]
+      },
+      {
+        "name": "STANDARD BANK",
+        "aliases": [
+          "STANDARD"
+        ]
+      },
+      {
+        "name": "TYMEBANK",
+        "aliases": [
+          "TYME"
+        ]
+      },
+      {
+        "name": "DISCOVERY",
+        "aliases": [
+          "DISCOVERY BANK"
+        ]
+      },
+      {
+        "name": "AFRICAN BANK",
+        "aliases": [
+          "AFRICAN"
+        ]
+      }
+    ]
+  },
+  "schema": {
+    "SOMETHINGdasd": {
+      "description": "Validation: LEV_DISTANCE. The company matched against the list of companies with 80% similarity",
+      "validate_type": "LEV_DISTANCE",
+      "regex": "^[A-Z}\\d{4}$",
+      "distance": 80,
+      "required": true
+    },
+    "SOMETHINGdad": {
+      "description": "Validation: LEV_DISTANCE. The company matched against the list of companies with 80% similarity",
+      "validate_type": "LEV_DISTANCE",
+      "regex": "^[A-Z}\\d{4}$",
+      "distance": 80,
+      "required": true
+    },
+    "SOMETHINdsGdasd": {
+      "description": "Validation: LEV_DISTANCE. The company matched against the list of companies with 80% similarity",
+      "validate_type": "LEV_DISTANCE",
+      "regex": "^[A-Z}\\d{4}$",
+      "distance": 80,
+      "required": true
+    },
+    "SOMETHING432": {
+      "description": "Validation: LEV_DISTANCE. The company matched against the list of companies with 80% similarity",
+      "validate_type": "LEV_DISTANCE",
+      "regex": "^[A-Z}\\d{4}$",
+      "distance": 80,
+      "required": true
+    },
+    "SOMETHINGda65": {
+      "description": "Validation: LEV_DISTANCE. The company matched against the list of companies with 80% similarity",
+      "validate_type": "LEV_DISTANCE",
+      "regex": "^[A-Z}\\d{4}$",
+      "distance": 80,
+      "required": true
+    },
+    "SOMETHING88": {
+      "description": "Validation: LEV_DISTANCE. The company matched against the list of companies with 80% similarity",
+      "validate_type": "LEV_DISTANCE",
+      "regex": "^[A-Z}\\d{4}$",
+      "distance": 80,
+      "required": true
+    },
+    "SOMETHING6": {
+      "description": "Validation: LEV_DISTANCE. The company matched against the list of companies with 80% similarity",
+      "validate_type": "LEV_DISTANCE",
+      "regex": "^[A-Z}\\d{4}$",
+      "distance": 80,
+      "required": true
+    },
+   "SOMETHING65": {
+      "description": "Validation: LEV_DISTANCE. The company matched against the list of companies with 80% similarity",
+      "validate_type": "LEV_DISTANCE",
+      "regex": "^[A-Z}\\d{4}$",
+      "distance": 80,
+      "required": true
+    },
+    "SOMETHING5": {
+      "description": "Validation: LEV_DISTANCE. The company matched against the list of companies with 80% similarity",
+      "validate_type": "LEV_DISTANCE",
+      "regex": "^[A-Z}\\d{4}$",
+      "distance": 80,
+      "required": true
+    },
+    "SOMETHING4": {
+      "description": "Validation: LEV_DISTANCE. The company matched against the list of companies with 80% similarity",
+      "validate_type": "LEV_DISTANCE",
+      "regex": "^[A-Z}\\d{4}$",
+      "distance": 80,
+      "required": true
+    },
+    "SOMETHING3": {
+      "description": "Validation: LEV_DISTANCE. The company matched against the list of companies with 80% similarity",
+      "validate_type": "LEV_DISTANCE",
+      "regex": "^[A-Z}\\d{4}$",
+      "distance": 80,
+      "required": true
+    },
+    "SOMETHING2d": {
+      "description": "Validation: LEV_DISTANCE. The company matched against the list of companies with 80% similarity",
+      "validate_type": "LEV_DISTANCE",
+      "regex": "^[A-Z}\\d{4}$",
+      "distance": 80,
+      "required": true
+    }
+  },
+  "lookup": [
+    "SHAREHOLDER_ID_NUMBER"
+  ],
+  "layout": {
+    "margins": {
+      "top": "0mm",
+      "bottom": "0mm",
+      "left": "0mm",
+      "right": "0mm"
+    }
+  }
+}

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Execution Summary Report{% endblock %}
+
+{% block header_title %}Execution Summary Report{% endblock %}
+
+{% block content %}
+<div class="report">
+    <div class="report-header">
+        <div class="info-box">
+            <p><strong>Execution ID:</strong> {{ execution_id }}</p>
+            <p><strong>Session Hash:</strong> {{ session_hash }}</p>
+            <p><strong>Generated:</strong> {{ generated_at }}</p>
+        </div>
+    </div>
+    
+    <div class="summary-boxes">
+        <div class="summary-box total">
+            <h2>{{ stats.num_html_files }}</h2>
+            <p>Total Records</p>
+        </div>
+        <div class="summary-box success">
+            <h2>{{ stats.num_pdf_files }}</h2>
+            <p>Successfully Processed</p>
+        </div>
+        <div class="summary-box failed">
+            <h2>{{ stats.errors }}</h2>
+            <p>Failed Records</p>
+        </div>
+        <div class="summary-box rate">
+            <h2>{{ (stats.num_pdf_files / stats.num_html_files * 100)|round(1) if stats.num_html_files else 0 }}%</h2>
+            <p>Success Rate</p>
+        </div>
+    </div>
+    
+    <h2>Processing Details</h2>
+    <table class="data-table">
+        <tr>
+            <th>Steps Completed</th>
+            <td>{{ steps_completed|join(", ") }}</td>
+        </tr>
+        <tr>
+            <th>Total records found</th>
+            <td>{{ stats.num_html_files }}</td>
+        </tr>
+        <tr>
+            <th>Valid records processed</th>
+            <td>{{ stats.num_pdf_files }}</td>
+        </tr>
+        <tr>
+            <th>Failed records</th>
+            <td>{{ stats.errors }}</td>
+        </tr>
+        <tr>
+            <th>HTML files generated</th>
+            <td>{{ stats.num_html_files }}</td>
+        </tr>
+        <tr>
+            <th>PDFs generated</th>
+            <td>{{ stats.num_pdf_files }}</td>
+        </tr>
+        <tr>
+            <th>Total execution time</th>
+            <td>{{ stats.total_conversion_time|round(1) }} seconds</td>
+        </tr>
+        <tr>
+            <th>Average conversion time</th>
+            <td>{{ stats.avg_conversion_time|round(3) }} seconds</td>
+        </tr>
+    </table>
+    
+    <h2>Log Files</h2>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Type</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.file }}</td>
+                    <td>{{ log.type }}</td>
+                    <td><a href="{{ log.path }}" class="button">View</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <h2>Next Steps</h2>
+    {% if stats.errors > 0 %}
+    <p>There were {{ stats.errors }} errors during processing. Please review the individual logs for details.</p>
+    {% else %}
+    <p>All records were processed successfully! The PDFs have been generated.</p>
+    {% endif %}
+    
+    <p>You can access all files through the <a href="dashboard.html">dashboard</a>.</p>
+</div>
+{% endblock %}

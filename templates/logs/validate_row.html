@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Row {{ row_index }} Validation{% endblock %}
+
+{% block header_title %}Row {{ row_index }} Validation - {{ document_type }}{% endblock %}
+
+{% block content %}
+<div class="report">
+    <div class="report-header">
+        <div class="info-box">
+            <p><strong>Execution ID:</strong> {{ execution_id }}</p>
+            <p><strong>Session Hash:</strong> {{ session_hash }}</p>
+            <p><strong>Generated:</strong> {{ generated_at }}</p>
+            <p><strong>Row:</strong> {{ row_index }}</p>
+        </div>
+    </div>
+    
+    <h2>Row Validation Results</h2>
+    <div class="summary-boxes">
+        <div class="summary-box total">
+            <h2>{{ row_data.fields|length }}</h2>
+            <p>Total Fields</p>
+        </div>
+        <div class="summary-box success">
+            <h2>{{ row_data.fields|selectattr('valid', 'equalto', true)|list|length }}</h2>
+            <p>Valid Fields</p>
+        </div>
+        <div class="summary-box failed">
+            <h2>{{ row_data.fields|selectattr('valid', 'equalto', false)|list|length }}</h2>
+            <p>Invalid Fields</p>
+        </div>
+        <div class="summary-box rate">
+            <h2>{{ (row_data.fields|selectattr('valid', 'equalto', true)|list|length / row_data.fields|length * 100)|round(1) if row_data.fields|length else 0 }}%</h2>
+            <p>Success Rate</p>
+        </div>
+    </div>
+    
+    <h2>Field Details</h2>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Column</th>
+                    <th>Value</th>
+                    <th>Expected</th>
+                    <th>Status</th>
+                    <th>Errors</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for field in row_data.fields %}
+                <tr class="{{ 'valid' if field.valid else 'invalid' }}">
+                    <td>{{ field.field }}</td>
+                    <td>{{ field.column or "Missing" }}</td>
+                    <td>{{ field.value or "Empty" }}</td>
+                    <td>{{ field.expected or "N/A" }}</td>
+                    <td>{{ field.status }}</td>
+                    <td>
+                        {% if field.errors %}
+                        <ul class="error-list">
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        None
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <h2>Next Steps</h2>
+    <p>
+        <a href="validate_{{ execution_id }}.html" class="button">Back to Validation Summary</a>
+    </p>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .error-list {
+        margin: 0;
+        padding-left: 1.5rem;
+    }
+</style>
+{% endblock %}

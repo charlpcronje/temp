@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Advice</title>
+    <style>
+        /* Styles remain the same */
+        html {
+            margin: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+            font-size: 12pt;
+        }
+        img.banner {
+            width: 100%;
+            display: block;
+            margin: 0; /* No margins for banner */
+            padding: 0;
+        }
+        .container {
+            width: calc(100% - 118px);
+            margin-left: 59px;
+            margin-right: 59px;
+            margin-top: 27px;
+            padding: 0;
+        }
+        .address-section {
+            margin-bottom: 20px;
+        }
+        .transaction-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18pt;
+            margin: 15px 0;
+        }
+        .transaction-info {
+            margin-bottom: 10px;
+        }
+        .payment-details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        .payment-details-table, th, td {
+            border: 1px solid #000;
+        }
+        td {
+            padding: 6px;
+            vertical-align: top;
+        }
+        .contact-info {
+            margin-bottom: 10px;
+        }
+        .tax-note {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        #payment-details-table td {
+            width: 50%;
+        }
+        @page {
+            margin: 0;
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <img style="border:none" class="banner" src="banner.png" alt="Company Logo">
+    <div class="container">
+        <div id="address-section" class="address-section">
+            <div id="shareholder_name">{{ record["Shareholder Full Name"] }}</div>
+            <div id="address1">{{ record["Address 1"] }}</div>
+            <div id="address2">{{ record["Address 2"] }}</div>
+            <div id="address3">{{ record["Address 3"] }}</div>
+            <div id="address4">{{ record["Address 4"] }}</div>
+            <div id="address5">{{ record["Address 5"] }}</div>
+            <div id="potcode_domicile">{{ record["Postal Code"] }}</div>
+        </div>
+
+        <div id="transaction-title" class="transaction-title">
+            TRANSACTION ADVICE
+        </div>
+
+        <div id="transaction-info" class="transaction-info">
+            We would like to inform you that funds owed to you have been paid directly to your bank account. <br/>
+            Information relating to the payment made is reflected below.
+        </div>
+        <br/>
+        <table id="payment-details-table" class="payment-details-table">
+            <tr>
+                <td>COMPANY NAME</td>
+                <td id="company_name">{{ record["Company Name"] }}</td>
+            </tr>
+            <tr>
+                <td>SHAREHOLDER REFERENCE NUMBER</td>
+                <td id="shareholder_reference_number">{{ record["Shareholder Number"] }}</td>
+            </tr>
+            <tr>
+                <td>PAYMENT DATE</td>
+                <td id="payment_date">{{ record["Payment Date"] }}</td>
+            </tr>
+            <tr>
+                <td>AMOUNT PAID (ZAR)</td>
+                <td id="amount_paid">{{ record["Amount Paid"] }}</td>
+            </tr>
+            <tr>
+                <td>BANK NAME</td>
+                <td id="bank_name">{{ record["Bank Name"] }}</td>
+            </tr>
+            <tr>
+                <td>BANK ACCOUNT NUMBER</td>
+                <!-- Assuming you still want masking logic applied later or during PDF generation -->
+                <td id="masked_account_number">{{ record["Bank Account Number"] }}</td>
+            </tr>
+            <tr>
+                <td>PAYMENT REFERENCE NUMBER</td>
+                <td id="payment_reference_number">{{ record["Payment Reference"] }}</td>
+            </tr>
+        </table>
+        <br/>
+        <div class="contact-info">
+            <!-- Keep placeholders if these are static or injected differently -->
+            Should you require further information, please call our Contact Centre on 086 140 1105 or +27 (0) 10 491 4840. Lines are open from 8:00am to 4:30pm, Monday to Friday (excluding public holidays).
+        </div>
+        <br/>
+        <div id="tax-note" class="tax-note">
+            *Note: Please keep this document for tax purposes
+        </div>
+    </div>
+</body>
+</html>

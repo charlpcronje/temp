@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Document Processing System{% endblock %}</title>
+    
+    <!-- Light and dark mode CSS -->
+    <link id="lightCss" rel="stylesheet" href="{{ css_path }}">
+    <link id="darkCss" rel="stylesheet" href="{{ dark_css_path }}" disabled>
+    
+    <script>
+        // Check for user preference and local storage setting
+        function setTheme() {
+            const darkMode = localStorage.getItem('darkMode') === 'true' || 
+                             (localStorage.getItem('darkMode') === null && 
+                              window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            
+            if (darkMode) {
+                document.getElementById('lightCss').disabled = true;
+                document.getElementById('darkCss').disabled = false;
+                document.documentElement.classList.add('dark-mode');
+                if (document.getElementById('themeToggle')) {
+                    document.getElementById('themeToggle').checked = true;
+                }
+            } else {
+                document.getElementById('lightCss').disabled = false;
+                document.getElementById('darkCss').disabled = true;
+                document.documentElement.classList.remove('dark-mode');
+                if (document.getElementById('themeToggle')) {
+                    document.getElementById('themeToggle').checked = false;
+                }
+            }
+        }
+        
+        // Toggle between light and dark mode
+        function toggleTheme() {
+            const isDarkMode = document.getElementById('darkCss').disabled === false;
+            localStorage.setItem('darkMode', !isDarkMode);
+            setTheme();
+        }
+        
+        // Set initial theme
+        document.addEventListener('DOMContentLoaded', setTheme);
+    </script>
+    
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>{% block header_title %}Document Processing System{% endblock %}</h1>
+                
+                {% if dark_mode_toggle %}
+                <div class="theme-toggle">
+                    <label class="switch">
+                        <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="toggle-label">Dark Mode</span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="javascript:history.back()">Back</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>Document Processing System &copy; {{ current_year }}</p>
+            <p>Generated at {{ generated_at }}</p>
+        </div>
+    </footer>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

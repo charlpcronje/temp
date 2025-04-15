@@ -1,0 +1,382 @@
+openapi: 3.0.0
+info:
+  title: Document Processing API
+  description: API for processing CSV/Excel files into HTML/PDF documents
+  version: 1.0.0
+  
+servers:
+  - url: http://localhost:8000
+    description: Development server
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+  
+  schemas:
+    CommandResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        command:
+          type: string
+        result:
+          type: object
+        error:
+          type: string
+          nullable: true
+    
+    ImportResult:
+      type: object
+      properties:
+        hash:
+          type: string
+        file_path:
+          type: string
+        table_name:
+          type: string
+        num_rows:
+          type: integer
+        columns:
+          type: array
+          items:
+            type: string
+        db_path:
+          type: string
+        session_dir:
+          type: string
+    
+    SessionStatus:
+      type: object
+      properties:
+        active_session:
+          type: boolean
+        session_hash:
+          type: string
+          nullable: true
+        session_dir:
+          type: string
+          nullable: true
+
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /commands:
+    get:
+      summary: List all available commands
+      operationId: listCommands
+      responses:
+        '200':
+          description: Commands list returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    func:
+                      type: string
+                    args:
+                      type: array
+                      items:
+                        type: string
+                    description:
+                      type: string
+  
+  /status:
+    get:
+      summary: Get current session status
+      operationId: getStatus
+      responses:
+        '200':
+          description: Session status returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionStatus'
+  
+  /run/import:
+    post:
+      summary: Import a file by path
+      operationId: importFile
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                file_path:
+                  type: string
+              required:
+                - file_path
+      responses:
+        '200':
+          description: File imported successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/CommandResponse'
+                  - type: object
+                    properties:
+                      result:
+                        $ref: '#/components/schemas/ImportResult'
+        '400':
+          description: Invalid file path
+        '500':
+          description: Import failed
+  
+  /run/import-upload:
+    post:
+      summary: Import an uploaded file
+      operationId: importUpload
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+                - file
+      responses:
+        '200':
+          description: File uploaded and imported successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/CommandResponse'
+                  - type: object
+                    properties:
+                      result:
+                        $ref: '#/components/schemas/ImportResult'
+        '400':
+          description: Invalid file
+        '500':
+          description: Upload or import failed
+  
+  /run/{command}:
+    post:
+      summary: Run any command
+      operationId: runCommand
+      parameters:
+        - name: command
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [validate, map, html, pdf, all]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Command executed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResponse'
+        '404':
+          description: Command not found
+        '500':
+          description: Command execution failed
+  
+  /logs:
+    get:
+      summary: Get list of all log directories
+      operationId: getLogs
+      responses:
+        '200':
+          description: List of log directories returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    hash:
+                      type: string
+                    name:
+                      type: string
+                    date:
+                      type: string
+                    file_count:
+                      type: integer
+  
+  /logs/{hash}:
+    get:
+      summary: Get information about a specific log directory
+      operationId: getLogInfo
+      parameters:
+        - name: hash
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Log information returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hash:
+                    type: string
+                  name:
+                    type: string
+                  date:
+                    type: string
+                  html_files:
+                    type: array
+                    items:
+                      type: string
+                  pdf_files:
+                    type: array
+                    items:
+                      type: string
+                  log_files:
+                    type: array
+                    items:
+                      type: string
+        '404':
+          description: Log directory not found
+  
+  /logs/{hash}/rename:
+    post:
+      summary: Rename a log directory
+      operationId: renameLog
+      parameters:
+        - name: hash
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
+      responses:
+        '200':
+          description: Log directory renamed successfully
+        '404':
+          description: Log directory not found
+  
+  /auth/login:
+    post:
+      summary: Authenticate user
+      operationId: login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      username:
+                        type: string
+                      role:
+                        type: string
+        '401':
+          description: Authentication failed
+  
+  /auth/verify:
+    get:
+      summary: Verify authentication token
+      operationId: verifyToken
+      responses:
+        '200':
+          description: Token is valid
+        '401':
+          description: Token is invalid
+  
+  /users:
+    get:
+      summary: Get list of users
+      operationId: getUsers
+      responses:
+        '200':
+          description: List of users returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    role:
+                      type: string
+    post:
+      summary: Create a new user
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                role:
+                  type: string
+              required:
+                - username
+                - password
+                - role
+      responses:
+        '201':
+          description: User created successfully
+        '400':
+          description: Invalid user data
+```

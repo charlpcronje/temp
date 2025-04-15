@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Field Mapping Report{% endblock %}
+
+{% block header_title %}Field Mapping Report{% endblock %}
+
+{% block content %}
+<div class="report">
+    <div class="report-header">
+        <div class="info-box">
+            <p><strong>Execution ID:</strong> {{ execution_id }}</p>
+            <p><strong>Session Hash:</strong> {{ session_hash }}</p>
+            <p><strong>Generated:</strong> {{ generated_at }}</p>
+        </div>
+    </div>
+    
+    <h2>Mapping Summary</h2>
+    <table class="data-table">
+        <tr>
+            <th>Mapping File</th>
+            <td>{{ mapping_file }}</td>
+        </tr>
+        <tr>
+            <th>Fields Mapped</th>
+            <td>{{ mapped_fields|length }}</td>
+        </tr>
+        <tr>
+            <th>Schema Fields</th>
+            <td>{{ schema_fields|length }}</td>
+        </tr>
+        <tr>
+            <th>Coverage</th>
+            <td>{{ (mapped_fields|length / schema_fields|length * 100)|round(1) if schema_fields|length else 0 }}%</td>
+        </tr>
+    </table>
+    
+    <h2>Field Mapping</h2>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Schema Field</th>
+                    <th>Column Name</th>
+                    <th>Required</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for field_name, field_def in schema_fields.items() %}
+                <tr class="{{ 'valid' if field_name in mapped_fields else 'invalid' }}">
+                    <td>{{ field_name }}</td>
+                    <td>{{ mapped_fields.get(field_name, 'Not Mapped') }}</td>
+                    <td>{{ 'Yes' if field_def.required else 'No' }}</td>
+                    <td>{{ field_def.validate_type }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <h2>Mapping JSON</h2>
+    <pre><code>{{ mapped_fields|tojson(indent=2) }}</code></pre>
+    
+    <h2>Next Steps</h2>
+    <p>The field mapping has been generated and saved to <code>{{ mapping_file }}</code>.</p>
+    
+    {% if mapped_fields|length < schema_fields|length %}
+    <p>Some schema fields are not mapped to columns. If any required fields are missing, you may need to update the mapping file manually before proceeding.</p>
+    {% else %}
+    <p>All schema fields have been mapped to columns.</p>
+    {% endif %}
+    
+    <p>You can now proceed to generate HTML files by running the <code>html</code> command.</p>
+</div>
+{% endblock %}

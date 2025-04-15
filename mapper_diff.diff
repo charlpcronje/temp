@@ -1,0 +1,626 @@
++def create_mapping_entry(field_name: str, field_def: Dict[str, Any]) -> Dict[str, Any]:
++    """
++    Create a comprehensive mapping entry with all schema field properties.   
++
++    Args:
++        field_name: Name of the field
++        field_def: Field definition from schema
++
++    Returns:
++        Dict containing all mapping properties
++    """
++    validate_type = field_def.get("validate_type", "NONE")
++
++    # Create a comprehensive mapping with all schema field properties        
++    mapping_entry = {
++        "type": field_name,
++        "validation": validate_type,
++        "validation_type": validate_type  # For compatibility with example format
++    }
++
++    # Copy all other properties from the field definition
++    if field_def.get("required"):
++        mapping_entry["required"] = field_def["required"]
++
++    if field_def.get("description"):
++        mapping_entry["description"] = field_def["description"]
++
++    if field_def.get("regex"):
++        mapping_entry["regex"] = field_def["regex"]
++
++    if field_def.get("list"):
++        mapping_entry["list"] = field_def["list"]
++
++    if field_def.get("distance"):
++        mapping_entry["distance"] = field_def["distance"]
++
++    if field_def.get("enum"):
++        mapping_entry["enum"] = field_def["enum"]
++
++    # Add slug if available or create one with the field name
++    mapping_entry["slug"] = field_def.get("slug", [field_name])
++
++    return mapping_entry
++
++
+ def generate_mapping_file() -> Dict[str, Any]:
+     """
+     Generate a field mapping file based on validation results.
+     If a mapping file already exists, it will be loaded instead of generating a new one.
+-
++
+     Returns:
+         Dict containing mapping information
+-
++
+     Raises:
+         ValueError: If no active session or validation results
+         OSError: If mapping file cannot be written
+@@ -35,19 +80,19 @@ def generate_mapping_file() -> Dict[str, Any]:
+     session_hash = get_current_session()
+     if not session_hash:
+         raise ValueError("No active session found")
+-
++
+     # First, check if a mapping file already exists
+     existing_mapping = None
+     try:
+         existing_mapping = load_mapping(session_hash)
+         if existing_mapping and len(existing_mapping) > 0:
+             logger.info(f"Found existing mapping file with {len(existing_mapping)} entries")
+-
++
+             # Get schema information for the existing mapping
+             schemas = load_schemas()
+             schema_name = None
+             schema_fields = {}
+-
++
+             # Try to determine which schema this mapping is for
+             for column, type_info in existing_mapping.items():
+                 type_name = type_info.get("type", "")
+@@ -58,11 +103,11 @@ def generate_mapping_file() -> Dict[str, Any]:
+                         break
+                 if schema_name:
+                     break
+-
++
+             if not schema_name and schemas:
+                 schema_name = next(iter(schemas))
+                 schema_fields = schemas[schema_name].get("schema", {})       
+-
++
+             # Check for required fields
+             missing_required = []
+             if schema_fields:
+@@ -76,7 +121,7 @@ def generate_mapping_file() -> Dict[str, Any]:
+                                 break
+                         if not found:
+                             missing_required.append(field_name)
+-
++
+             # Return the existing mapping
+             return {
+                 "mapping_file": os.path.join(get_session_dir(session_hash), "mappings", f"{session_hash}_mapping.json"),
+@@ -86,43 +131,72 @@ def generate_mapping_file() -> Dict[str, Any]:
+             }
+     except Exception as e:
+         logger.warning(f"Error loading existing mapping file: {e}")
+-
++
+     # If no existing mapping or error loading it, proceed with generating a new mapping
+-
++
+     # Get validation results (validate if not done already)
+     try:
+         # Try to load existing validation results first
+         validation_results = load_validation_results(session_hash)
+         if not validation_results:
+             # If no results, run validation
++            logger.info("No validation results found, running validation")   
+             validation_results = validate_data()
+     except Exception as e:
+-        logger.warning(f"Error loading validation results, running validation: {e}")
+-        validation_results = validate_data()
+-
++        logger.warning(f"Error loading validation results: {e}")
++        try:
++            logger.info("Attempting to run validation")
++            validation_results = validate_data()
++        except Exception as inner_e:
++            logger.error(f"Failed to run validation: {inner_e}")
++            # Create a minimal validation result with just the schema        
++            from core.validator import load_schemas
++            schemas = load_schemas()
++            if not schemas:
++                raise ValueError("No schemas found")
++
++            # Use the first schema
++            schema_name = next(iter(schemas))
++            schema = schemas[schema_name]
++
++            validation_results = {
++                "field_matches": {},
++                "schema": schema,
++                "row_validations": []
++            }
++
+     # Extract field matches and schema
+     field_matches = validation_results["field_matches"]
+     schema = validation_results["schema"]
+     schema_fields = schema.get("schema", {})
+-
++
+     # Create mapping dict
+     mapping = {}
+     for field_name, match_info in field_matches.items():
++        # Skip unmapped fields (they start with UNMAPPED_)
++        if field_name.startswith("UNMAPPED_"):
++            continue
++
+         column_name = match_info.get("column")
+         if column_name:
+             # Get the field definition from the schema to include type information
+             field_def = schema_fields.get(field_name, {})
+-            validate_type = field_def.get("validate_type", "NONE")
+-
+-            # Store the type name for each column
+-            mapping[column_name] = {
+-                "type": field_name,
+-                "validation": validate_type
+-            }
+-
++
++            # Skip if field_def is empty (field not in schema)
++            if not field_def and not field_name.startswith("UNMAPPED_"):     
++                logger.warning(f"Field '{field_name}' not found in schema, skipping")
++                continue
++
++            # Create a comprehensive mapping entry with all schema field properties
++            mapping_entry = create_mapping_entry(field_name, field_def)      
++
++            # Store the mapping entry for this column
++            mapping[column_name] = mapping_entry
++
+             # Log the mapping that's being created
++            validate_type = field_def.get("validate_type", "NONE")
+             logger.debug(f"Mapped column '{column_name}' to schema type '{field_name}' with validation '{validate_type}'")
+-
++
+     # Check for required fields that aren't mapped
+     missing_required = []
+     for field_name, field_def in schema_fields.items():
+@@ -135,33 +209,33 @@ def generate_mapping_file() -> Dict[str, Any]:
+                     break
+             if not found:
+                 missing_required.append(field_name)
+-
++
+     if missing_required:
+         logger.warning(f"Missing mappings for required fields: {', '.join(missing_required)}")
+-
++
+     # Save mapping to file
+     session_dir = get_session_dir(session_hash)
+     mappings_dir = os.path.join(session_dir, "mappings")
+     os.makedirs(mappings_dir, exist_ok=True)
+-
++
+     mapping_file = os.path.join(mappings_dir, f"{session_hash}_mapping.json")
+-
++
+     try:
+         with open(mapping_file, 'w') as f:
+             json.dump(mapping, f, indent=2)
+-
++
+         logger.info(f"Generated mapping file: {mapping_file}")
+     except OSError as e:
+         logger.error(f"Failed to write mapping file: {e}")
+         raise
+-
++
+     # Update session status
+     update_session_status(
+-        session_hash,
++        session_hash,
+         file_path="",  # We don't need to update the file path
+         operation="GENERATE_MAPPING"
+     )
+-
++
+     # Log mapping generation
+     html_logger = HTMLLogger(session_hash)
+     html_logger.log_mapping(
+@@ -169,7 +243,7 @@ def generate_mapping_file() -> Dict[str, Any]:
+         mapped_fields=mapping,
+         schema_fields=schema_fields
+     )
+-
++
+     return {
+         "mapping_file": mapping_file,
+         "mapped_fields": mapping,
+@@ -181,10 +255,10 @@ def generate_mapping_file() -> Dict[str, Any]:
+ def load_mapping(session_hash: Optional[str] = None) -> Dict[str, Any]:      
+     """
+     Load a field mapping file for a session.
+-
++
+     Args:
+         session_hash: Hash of the session to load mapping for, or None to use current session
+-
++
+     Returns:
+         Dict mapping column names to mapping information
+     """
+@@ -192,18 +266,18 @@ def load_mapping(session_hash: Optional[str] = None) -> Dict[str, Any]:
+         session_hash = get_current_session()
+         if not session_hash:
+             raise ValueError("No active session found")
+-
++
+     session_dir = get_session_dir(session_hash)
+     mapping_file = os.path.join(session_dir, "mappings", f"{session_hash}_mapping.json")
+-
++
+     if not os.path.isfile(mapping_file):
+         logger.warning(f"Mapping file not found: {mapping_file}")
+         return {}
+-
++
+     try:
+         with open(mapping_file, 'r') as f:
+             mapping = json.load(f)
+-
++
+         # Handle legacy format where mapping is just strings
+         # Convert to new format with column and type
+         updated_mapping = {}
+@@ -216,7 +290,7 @@ def load_mapping(session_hash: Optional[str] = None) -> Dict[str, Any]:
+             else:
+                 # Already in new format
+                 updated_mapping[column_name] = value
+-
++
+         return updated_mapping
+     except Exception as e:
+         logger.error(f"Failed to load mapping file: {e}")
+@@ -226,10 +300,10 @@ def load_mapping(session_hash: Optional[str] = None) -> Dict[str, Any]:
+ def load_validation_results(session_hash: Optional[str] = None) -> Optional[Dict[str, Any]]:
+     """
+     Try to load existing validation results for a session.
+-
++
+     Args:
+         session_hash: Hash of the session to load results for, or None to use current session
+-
++
+     Returns:
+         Dict with validation results or None if not found
+     """
+@@ -237,25 +311,25 @@ def load_validation_results(session_hash: Optional[str] = None) -> Optional[Dict
+         session_hash = get_current_session()
+         if not session_hash:
+             return None
+-
++
+     session_dir = get_session_dir(session_hash)
+-
++
+     # Try to find the most recent validation file
+     logs_dir = os.path.join(session_dir, "logs")
+     if not os.path.isdir(logs_dir):
+         return None
+-
++
+     validation_files = [f for f in os.listdir(logs_dir) if f.startswith("validate_") and not f.startswith("validate_row_")]
+-
++
+     if not validation_files:
+         return None
+-
++
+     # Sort by modification time (newest first)
+     validation_files.sort(key=lambda f: os.path.getmtime(os.path.join(logs_dir, f)), reverse=True)
+-
++
+     # This is a simplification - in a real system, we would parse the HTML   
+     # to extract structured data, or store the validation results in a separate JSON file
+-
++
+     # For now, we'll just return a placeholder and let validate_data() run again
+     return None
+
+@@ -263,10 +337,10 @@ def load_validation_results(session_hash: Optional[str] = None) -> Optional[Dict
+ def update_mapping(field_updates: Dict[str, Any]) -> Dict[str, Any]:
+     """
+     Update the field mapping file with user-provided changes.
+-
++
+     Args:
+         field_updates: Dict of field names to updates (column or full mapping)
+-
++
+     Returns:
+         Dict containing updated mapping information
+     """
+@@ -274,38 +348,73 @@ def update_mapping(field_updates: Dict[str, Any]) -> Dict[str, Any]:
+     session_hash = get_current_session()
+     if not session_hash:
+         raise ValueError("No active session found")
+-
++
+     # Load existing mapping
+     current_mapping = load_mapping(session_hash)
+-
++
+     # Load validation results to get schema information
+-    validation_results = load_validation_results(session_hash)
+-    if not validation_results:
+-        raise ValueError("No validation results found")
+-
+-    schema = validation_results["schema"]
+-    schema_fields = schema.get("schema", {})
+-
++    try:
++        validation_results = load_validation_results(session_hash)
++        if not validation_results:
++            # If no validation results found, run validation to get them     
++            logger.info("No validation results found, running validation")   
++            from core.validator import validate_data
++            validation_results = validate_data()
++
++        schema = validation_results["schema"]
++        schema_fields = schema.get("schema", {})
++    except Exception as e:
++        # If we can't get validation results, load schemas directly
++        logger.warning(f"Error loading validation results: {e}")
++        logger.info("Loading schemas directly")
++        from core.validator import load_schemas
++        schemas = load_schemas()
++
++        # Try to determine which schema to use based on existing mapping     
++        schema_name = None
++        for col, mapping_info in current_mapping.items():
++            type_name = mapping_info.get("type", "")
++            for s_name, s in schemas.items():
++                if type_name in s.get("schema", {}):
++                    schema_name = s_name
++                    break
++            if schema_name:
++                break
++
++        # If we couldn't determine the schema, use the first one
++        if not schema_name and schemas:
++            schema_name = next(iter(schemas))
++
++        if not schema_name:
++            raise ValueError("No schemas found and no existing mapping to determine schema")
++
++        schema = schemas[schema_name]
++        schema_fields = schema.get("schema", {})
++
+     # Update mapping with user-provided changes
+     for field_key, update in field_updates.items():
+-        # Check if this is a column:field_name format
++        # Check if this is a column:field_name format (old format)
+         if field_key.startswith("column:"):
+             # Format is "column:TYPE_NAME", extract TYPE_NAME
+             field_name = field_key.split(":", 1)[1]
+             if field_name not in schema_fields:
+                 logger.warning(f"Ignoring update for unknown field: {field_name}")
+                 continue
+-
++
+             # Find and remove any existing mapping for this field_name       
+             for col in list(current_mapping.keys()):
+                 if current_mapping[col].get("type") == field_name:
+                     del current_mapping[col]
+-
++
+             # Add the new mapping if a column name is provided
+             if update and isinstance(update, str):
+-                current_mapping[update] = {
+-                    "type": field_name
+-                }
++                # Get the field definition from the schema
++                field_def = schema_fields.get(field_name, {})
++
++                # Create a comprehensive mapping entry with all schema field properties
++                mapping_entry = create_mapping_entry(field_name, field_def)  
++
++                current_mapping[update] = mapping_entry
+         elif field_key in schema_fields:
+             # Direct field name used (backward compatibility)
+             if isinstance(update, str):
+@@ -313,43 +422,82 @@ def update_mapping(field_updates: Dict[str, Any]) -> Dict[str, Any]:
+                 for col in list(current_mapping.keys()):
+                     if current_mapping[col].get("type") == field_key:        
+                         del current_mapping[col]
+-
++
+                 # Add new mapping if a column name is provided
+                 if update:
+-                    current_mapping[update] = {
+-                        "type": field_key
+-                    }
++                    # Get the field definition from the schema
++                    field_def = schema_fields.get(field_key, {})
++
++                    # Create a comprehensive mapping entry with all schema field properties
++                    mapping_entry = create_mapping_entry(field_key, field_def)
++
++                    current_mapping[update] = mapping_entry
+             elif isinstance(update, dict) and "column" in update:
+                 # Find and remove any existing mapping for this field_name   
+                 for col in list(current_mapping.keys()):
+                     if current_mapping[col].get("type") == field_key:        
+                         del current_mapping[col]
+-
++
+                 # Add new mapping if a column name is provided
+                 if update["column"]:
+-                    current_mapping[update["column"]] = {
+-                        "type": field_key
+-                    }
+-
++                    # Get the field definition from the schema
++                    field_def = schema_fields.get(field_key, {})
++
++                    # Create a comprehensive mapping entry with all schema field properties
++                    mapping_entry = create_mapping_entry(field_key, field_def)
++
++                    current_mapping[update["column"]] = mapping_entry        
++        else:
++            # New format: field_key is the column name, update is the field d
+efinition
++            # Check if update has a 'type' field, which indicates it's a field definition
++            if isinstance(update, dict) and "type" in update:
++                field_name = update["type"]
++
++                # Validate that the field type exists in the schema
++                if field_name not in schema_fields and not field_name.startswith("UNMAPPED_"):
++                    logger.warning(f"Ignoring update for unknown field type: {field_name}")
++                    continue
++
++                # Remove any existing mapping for this column
++                if field_key in current_mapping:
++                    del current_mapping[field_key]
++
++                # Remove any existing mapping for this field type
++                for col in list(current_mapping.keys()):
++                    if current_mapping[col].get("type") == field_name:       
++                        del current_mapping[col]
++
++                # Create a mapping entry using the provided field definition 
++                # If it's a schema field, use the schema definition as a base
++                if field_name in schema_fields:
++                    field_def = schema_fields.get(field_name, {})
++                    mapping_entry = create_mapping_entry(field_name, field_def)
++                else:
++                    # For unmapped fields or custom fields, use the provided definition
++                    mapping_entry = update.copy()
++
++                # Add the mapping
++                current_mapping[field_key] = mapping_entry
++
+     # Save updated mapping
+     session_dir = get_session_dir(session_hash)
+     mappings_dir = os.path.join(session_dir, "mappings")
+     os.makedirs(mappings_dir, exist_ok=True)
+-
++
+     mapping_file = os.path.join(mappings_dir, f"{session_hash}_mapping.json")
+-
++
+     try:
+         with open(mapping_file, 'w') as f:
+             json.dump(current_mapping, f, indent=2)
+-
++
+         logger.info(f"Updated mapping file: {mapping_file}")
+     except OSError as e:
+         logger.error(f"Failed to write updated mapping file: {e}")
+         raise
+-
++
+     # Update session status
+     update_session_status(session_hash, "UPDATE_MAPPING")
+-
++
+     # Log the update
+     html_logger = HTMLLogger(session_hash)
+     html_logger.log_mapping(
+@@ -357,18 +505,18 @@ def update_mapping(field_updates: Dict[str, Any]) -> Dict[str, Any]:
+         mapped_fields=current_mapping,
+         schema_fields=schema_fields
+     )
+-
++
+     return current_mapping
+
+
+ def get_column_for_field(field_name: str, session_hash: Optional[str] = None) -> Optional[str]:
+     """
+     Get the mapped column name for a field.
+-
++
+     Args:
+         field_name: Name of the field to look up
+         session_hash: Hash of the session to use, or None for current session
+-
++
+     Returns:
+         Column name or None if not mapped
+     """
+@@ -382,11 +530,11 @@ def get_column_for_field(field_name: str, session_hash: Optional[str] = None) ->
+ def get_field_for_column(column_name: str, session_hash: Optional[str] = None) -> Optional[str]:
+     """
+     Get the field type for a column.
+-
++
+     Args:
+         column_name: Name of the column to look up
+         session_hash: Hash of the session to use, or None for current session
+-
++
+     Returns:
+         Field type name or None if not mapped
+     """
+@@ -398,10 +546,10 @@ def get_field_for_column(column_name: str, session_hash: Optional[str] = None) -
+ def delete_mapping_file() -> Dict[str, Any]:
+     """
+     Delete the field mapping file for the current session.
+-
++
+     Returns:
+         Dict with status of the operation
+-
++
+     Raises:
+         ValueError: If no active session found
+     """
+@@ -409,16 +557,16 @@ def delete_mapping_file() -> Dict[str, Any]:
+     session_hash = get_current_session()
+     if not session_hash:
+         raise ValueError("No active session found")
+-
++
+     # Get path to mapping file
+     session_dir = get_session_dir(session_hash)
+     mapping_path = os.path.join(session_dir, "mappings", f"{session_hash}_mapping.json")
+-
++
+     # Check if mapping file exists
+     if not os.path.isfile(mapping_path):
+         logger.warning(f"No mapping file found at {mapping_path}")
+         return {"status": "not_found", "message": "No mapping file found"}   
+-
++
+     try:
+         # Create a backup before deleting
+         backup_path = f"{mapping_path}.bak"
+@@ -426,18 +574,18 @@ def delete_mapping_file() -> Dict[str, Any]:
+         if not os.path.exists(os.path.dirname(backup_path)):
+             os.makedirs(os.path.dirname(backup_path), exist_ok=True)
+         shutil.copy2(mapping_path, backup_path)
+-
++
+         # Delete the file
+         os.remove(mapping_path)
+         logger.info(f"Deleted mapping file: {mapping_path}")
+-
++
+         # Update session status
+         update_session_status(
+-            session_hash,
++            session_hash,
+             file_path="",
+             operation="DELETE_MAPPING"
+         )
+-
++
+         return {"status": "success", "message": "Mapping file deleted successfully"}
+     except Exception as e:
+         logger.error(f"Error deleting mapping file: {e}")

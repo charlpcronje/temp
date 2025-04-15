@@ -1,0 +1,283 @@
+{% extends "base.jinja2" %}
+
+{% set active_report = "exceptions" %}
+{% set title = "Exceptions Report" %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div>Exceptions Overview</div>
+        <div>Report Date: {{ report_date }}</div>
+    </div>
+    <div class="card-body">
+        <p>This report shows unresolved issues that require attention before proceeding to document finalization.</p>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Unmatched Records</div>
+                <div class="value">{{ exceptions.unmatched_rows|length }}</div>
+                <div class="description">Records without a user match</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Ambiguous Matches</div>
+                <div class="value">{{ exceptions.ambiguous_matches|length }}</div>
+                <div class="description">Records with multiple potential matches</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Missing Fields</div>
+                <div class="value">{{ exceptions.missing_fields|length }}</div>
+                <div class="description">Required fields not found</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Validation Errors</div>
+                <div class="value">{{ exceptions.validation_errors|length }}</div>
+                <div class="description">Data formatting or type errors</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if exceptions.unmatched_rows|length > 0 %}
+<div class="card">
+    <div class="card-header">
+        <div>Unmatched Records</div>
+    </div>
+    <div class="card-body">
+        <p>The following records could not be matched to any user in the system:</p>
+        
+        <div class="exception-list">
+            {% for row in exceptions.unmatched_rows %}
+            <div class="exception-item">
+                <div class="exception-header">
+                    <div>Row ID: {{ row.row_id }}</div>
+                    <div>Status: Unmatched</div>
+                </div>
+                <div class="exception-body">
+                    <div class="exception-reason">Reason: {{ row.reason }}</div>
+                    
+                    <h4>Row Data</h4>
+                    <table>
+                        {% for key, value in row.data.items() %}
+                        <tr>
+                            <th>{{ key }}</th>
+                            <td>{{ value }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    
+                    <h4>Possible Solutions</h4>
+                    <ul>
+                        <li>Create a new user with matching information</li>
+                        <li>Update an existing user's information to match this record</li>
+                        <li>Modify the record data to match an existing user</li>
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if exceptions.ambiguous_matches|length > 0 %}
+<div class="card">
+    <div class="card-header">
+        <div>Ambiguous Matches</div>
+    </div>
+    <div class="card-body">
+        <p>The following records have multiple potential user matches:</p>
+        
+        <div class="exception-list">
+            {% for match in exceptions.ambiguous_matches %}
+            <div class="exception-item">
+                <div class="exception-header">
+                    <div>Row ID: {{ match.row_id }}</div>
+                    <div>Status: Ambiguous Match</div>
+                </div>
+                <div class="exception-body">
+                    <div class="exception-reason">Reason: {{ match.reason }}</div>
+                    
+                    <h4>Possible Matches</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Name</th>
+                                <th>Match Fields</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for possible_match in match.possible_matches %}
+                            <tr>
+                                <td>{{ possible_match.user_id }}</td>
+                                <td>{{ possible_match.name|default("Unknown") }}</td>
+                                <td>{{ possible_match.match_fields|join(", ") }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                    <h4>Possible Solutions</h4>
+                    <ul>
+                        <li>Manually select the correct match from the list above</li>
+                        <li>Add additional identifying information to the record or users</li>
+                        <li>Update the matching rules to prioritize more specific fields</li>
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if exceptions.missing_fields|length > 0 %}
+<div class="card">
+    <div class="card-header">
+        <div>Missing Required Fields</div>
+    </div>
+    <div class="card-body">
+        <p>The following required fields are missing from some records:</p>
+        
+        <div class="exception-list">
+            {% for field in exceptions.missing_fields %}
+            <div class="exception-item">
+                <div class="exception-header">
+                    <div>Field: {{ field.name }}</div>
+                    <div>Status: Missing</div>
+                </div>
+                <div class="exception-body">
+                    <div class="exception-reason">Reason: {{ field.reason }}</div>
+                    
+                    <h4>Affected Rows</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Row ID</th>
+                                <th>Impact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in field.affected_rows %}
+                            <tr>
+                                <td>{{ row.row_id }}</td>
+                                <td>{{ row.impact }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                    <h4>Possible Solutions</h4>
+                    <ul>
+                        <li>Add the missing field data to the source file and reimport</li>
+                        <li>Update the schema to make this field optional</li>
+                        <li>Provide a default value for the missing field</li>
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if exceptions.validation_errors|length > 0 %}
+<div class="card">
+    <div class="card-header">
+        <div>Validation Errors</div>
+    </div>
+    <div class="card-body">
+        <p>The following records contain validation errors:</p>
+        
+        <div class="exception-list">
+            {% for error in exceptions.validation_errors %}
+            <div class="exception-item">
+                <div class="exception-header">
+                    <div>Row ID: {{ error.row_id }}</div>
+                    <div>Status: Invalid Data</div>
+                </div>
+                <div class="exception-body">
+                    <div class="exception-reason">Reason: {{ error.reason }}</div>
+                    
+                    <h4>Error Details</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Value</th>
+                                <th>Expected</th>
+                                <th>Error</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for field in error.fields %}
+                            <tr>
+                                <td>{{ field.name }}</td>
+                                <td>{{ field.value }}</td>
+                                <td>{{ field.expected }}</td>
+                                <td>{{ field.error }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                    <h4>Possible Solutions</h4>
+                    <ul>
+                        <li>Correct the data in the source file and reimport</li>
+                        <li>Manually update the data in the database</li>
+                        <li>Adjust the validation rules if the data is actually valid</li>
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="card">
+    <div class="card-header">
+        <div>Next Steps</div>
+    </div>
+    <div class="card-body">
+        {% if exceptions.unmatched_rows|length > 0 or 
+              exceptions.ambiguous_matches|length > 0 or 
+              exceptions.missing_fields|length > 0 or 
+              exceptions.validation_errors|length > 0 %}
+              
+        <div class="status status-warning">⚠️ Exceptions Require Resolution</div>
+        <p>The following actions are recommended to resolve the exceptions:</p>
+        <ul>
+            {% if exceptions.unmatched_rows|length > 0 %}
+            <li>Create or update users to match the {{ exceptions.unmatched_rows|length }} unmatched records</li>
+            {% endif %}
+            
+            {% if exceptions.ambiguous_matches|length > 0 %}
+            <li>Manually select the correct match for {{ exceptions.ambiguous_matches|length }} ambiguous records</li>
+            {% endif %}
+            
+            {% if exceptions.missing_fields|length > 0 %}
+            <li>Add the missing required fields to the affected records</li>
+            {% endif %}
+            
+            {% if exceptions.validation_errors|length > 0 %}
+            <li>Correct the validation errors in the affected records</li>
+            {% endif %}
+        </ul>
+        
+        <p>After resolving these exceptions, run the <code>report_generate</code> command again to verify all issues are resolved.</p>
+        
+        {% else %}
+        
+        <div class="status status-success">✅ No Exceptions Found</div>
+        <p>No exceptions were found in this session. The data is ready for processing.</p>
+        <p>Next steps:</p>
+        <ul>
+            <li>Proceed to document generation with the <code>html</code> and <code>pdf</code> commands</li>
+            <li>Review the <a href="summary.html">Summary Report</a> for an overview of the session</li>
+        </ul>
+        
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

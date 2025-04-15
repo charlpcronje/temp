@@ -1,0 +1,15 @@
+**/__pycache__/*
+**/.vscode/*
+**/config/*
+output
+**/node_modules/*
+.history
+**/public/dist/*
+auth.db
+**/test/*
+**/public/node_modules/*
+**/output/*
+**/.git/*
+.env
+log.log
+**/output

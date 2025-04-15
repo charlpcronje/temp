@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}PDF Generation Report{% endblock %}
+
+{% block header_title %}PDF Generation Report{% endblock %}
+
+{% block content %}
+<div class="report">
+    <div class="report-header">
+        <div class="info-box">
+            <p><strong>Execution ID:</strong> {{ execution_id }}</p>
+            <p><strong>Session Hash:</strong> {{ session_hash }}</p>
+            <p><strong>Generated:</strong> {{ generated_at }}</p>
+        </div>
+    </div>
+    
+    <h2>Generation Summary</h2>
+    <div class="summary-boxes">
+        <div class="summary-box total">
+            <h2>{{ num_files }}</h2>
+            <p>PDF Files</p>
+        </div>
+        <div class="summary-box success">
+            <h2>{{ total_time|round(2) }}</h2>
+            <p>Total Time (s)</p>
+        </div>
+        <div class="summary-box rate">
+            <h2>{{ (total_time / num_files)|round(3) if num_files else 0 }}</h2>
+            <p>Avg Time (s)</p>
+        </div>
+    </div>
+    
+    <h2>Generated Files</h2>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>File Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in file_list %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ file }}</td>
+                    <td><a href="../pdf/{{ file }}" class="button" target="_blank">View</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    {% if errors %}
+    <h2>Errors</h2>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>File</th>
+                    <th>Error</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for error in errors %}
+                <tr class="error">
+                    <td>{{ error.file }}</td>
+                    <td>{{ error.error }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+    
+    <h2>Next Steps</h2>
+    <p>PDF files have been generated successfully.</p>
+    <p>You can view the <a href="execution_summary_{{ execution_id }}.html">execution summary</a> or return to the <a href="dashboard.html">dashboard</a>.</p>
+</div>
+{% endblock %}

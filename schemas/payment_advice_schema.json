@@ -1,0 +1,220 @@
+{
+  "type": "payment_advice",
+  "template": "payment_advice.html",
+  "pass_threshold": 80,
+  "output_doc_name": "{datetime}_{SHAREHOLDER_ID_NUMBER}_payment_advice_{PAYMENT_REFERENCE}.{HTML|PDF}",
+  "enums": {
+    "COUNTRY_CODE": [
+      "AF",
+      "AX",
+      "SB",
+      "SO",
+      "ZA",
+      "GS",
+      "SS",
+      "ES"
+    ]
+  },
+  "lists": {
+    "COMPANY_NAME": [
+      {
+        "name": "Remgro Limited",
+        "aliases": [
+          "remgro",
+          "remgro limited"
+        ]
+      },
+      {
+        "name": "Sasol Limited",
+        "aliases": [
+          "sasol",
+          "sasol limited"
+        ]
+      },
+      {
+        "name": "Old Mutual",
+        "aliases": [
+          "oml",
+          "old mutual limited",
+          "OLD MUTUAL PLC"
+        ]
+      },
+      {
+        "name": "Quilter",
+        "aliases": [
+          "qlt",
+          "quilter limited",
+          "QUILTER PLC"
+        ]
+      },
+      {
+        "name": "Yeboyethu (RF) Limited",
+        "aliases": [
+          "yeboyethu (rf) limited"
+        ]
+      },
+      {
+        "name": "Reunert Limited",
+        "aliases": [
+          "reunert limited"
+        ]
+      },
+      {
+        "name": "Naspers Beperk -N",
+        "aliases": [
+          "naspers beperk -n"
+        ]
+      },
+      {
+        "name": "Merafe Resources Limited",
+        "aliases": [
+          "merafe resources limited"
+        ]
+      }
+    ],
+    "BANK_NAME": [
+      {
+        "name": "BIDVEST BANK",
+        "aliases": [
+          "BIDVEST"
+        ]
+      },
+      {
+        "name": "CAPITEC BANK",
+        "aliases": [
+          "CAPITEC"
+        ]
+      },
+      {
+        "name": "First National Bank",
+        "aliases": [
+          "FNB"
+        ]
+      },
+      {
+        "name": "ABSA BANK",
+        "aliases": [
+          "ABSA"
+        ]
+      },
+      {
+        "name": "NEDBANK LIMITED",
+        "aliases": [
+          "NEDBANK"
+        ]
+      },
+      {
+        "name": "STANDARD BANK",
+        "aliases": [
+          "STANDARD"
+        ]
+      },
+      {
+        "name": "TYMEBANK",
+        "aliases": [
+          "TYME"
+        ]
+      },
+      {
+        "name": "DISCOVERY",
+        "aliases": [
+          "DISCOVERY BANK"
+        ]
+      },
+      {
+        "name": "AFRICAN BANK",
+        "aliases": [
+          "AFRICAN"
+        ]
+      }
+    ]
+  },
+  "schema": {
+    "COMPANY_NAME": {
+      "description": "Validation: LEV_DISTANCE. The company matched against the list of companies with 80% similarity",
+      "validate_type": "LEV_DISTANCE",
+      "list": "COMPANY_NAME",
+      "distance": 80,
+      "required": true,
+      "slug": ["COMPANY_NAME", "COMPANY", "ISSUER"]
+    },
+    "SHAREHOLDER_ID_NUMBER": {
+      "description": "Validation: SA_ID_NUMBER. The ID number of the shareholder matched against the algorithm for SA ID numbers(SA_ID_NUMBER)",
+      "validate_type": "SA_ID_NUMBER",
+      "required": true,
+      "slug": ["SHAREHOLDER_ID_NUMBER", "ID_NUMBER", "ID"]
+    },
+    "SHAREHOLDER_NUMBER": {
+      "description": "Matches a shareholder number with optional 1–3 uppercase letter prefix followed by 6–13 digits. Examples include '2000075336936', 'C0063752643', 'U0075202450', or 'YY0042786'.",
+      "validate_type": "REGEX",
+      "regex": "^[A-Z]{0,3}\\d{6,13}$",
+      "required": true
+    },
+    "SHAREHOLDER_FULL_NAME": {
+      "description": "Validation: REGEX. The shareholder full name of the",
+      "validate_type": "REGEX",
+      "regex": "^[A-Za-z\\s''\\-]+$",
+      "required": true
+    },
+    "ADDRESS_LINE": {
+      "description": "Validation: REGEX. The shareholder address line 1 to 5",
+      "validate_type": "REGEX",
+      "regex": "^.{2,}$",
+      "required": true,
+      "max_matches": 5,
+      "slug": ["ADDRESS_LINE", "ADDRESS", "ADDR"]
+    },
+    "SA_POSTAL_CODE": {
+      "description": "Validation: REGEX. The shareholder address postal code (must be a valid 4-digit SA postal code, excluding 0000).",
+      "validate_type": "REGEX",
+      "regex": "^\\d{4}$",
+      "required": true
+    },
+    "DOMICILE_CODE": {
+      "description": "Validation: ENUM. The shareholder country code validated against the COUNTRY_CODE list with 100% accuracy (ENUM)",
+      "validate_type": "ENUM",
+      "enum": "COUNTRY_CODE",
+      "required": false
+    },
+    "PAYMENT_DATE": {
+      "description": "Validation: UNIX_DATE. Date the payment was made",
+      "validate_type": "UNIX_DATE",
+      "required": true
+    },
+    "AMOUNT_PAID": {
+      "description": "Validation: DECIMAL_AMOUNT. Amount paid 00.00",
+      "validate_type": "DECIMAL_AMOUNT",
+      "required": true
+    },
+    "BANK_NAME": {
+      "description": "Validation: LEV_DISTANCE. Bank form a list with an accuracy of 80%",
+      "validate_type": "LEV_DISTANCE",
+      "list": "BANK_NAME",
+      "distance": 80,
+      "required": true
+    },
+    "BANK_ACCOUNT_NUMBER": {
+      "description": "Matches a South African bank account number in either:\n- Fully masked format with 9 asterisks followed by 4 digits (e.g., '*********6960'), or\n- Fully visible numeric account number (6 to 11 digits, e.g., '12345678901').",
+      "validate_type": "REGEX",
+      "regex": "^(?:\\*{9}\\d{4}|\\d{6,11})$",
+      "required": true
+    },
+    "PAYMENT_REFERENCE": {
+      "description": "Matches flexible South African-style payment references with optional alphabetic prefixes or suffixes. Format includes:\n- A core numeric section (6–15 digits)\n- Optional alphabetic prefix (e.g., 'U', 'C', 'YY')\n- Optional slash-suffix (e.g., '/OML', '/QLT')\n- Optional trailing letters after numeric or suffix segments",
+      "validate_type": "REGEX",
+      "regex": "^[A-Z]*\\d{6,15}(?:\\/[A-Z]+)?[A-Z]*$",
+      "required": true
+    }
+  },
+  "lookup": [
+    "SHAREHOLDER_ID_NUMBER"
+  ],
+  "layout": {
+    "margins": {
+      "top": "0mm",
+      "bottom": "0mm",
+      "left": "0mm",
+      "right": "0mm"
+    }
+  }
+}

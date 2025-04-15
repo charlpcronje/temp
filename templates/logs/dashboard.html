@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Document Processing Dashboard{% endblock %}
+
+{% block header_title %}Document Processing Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header">
+        <div class="info-box">
+            <h2>Session Information</h2>
+            <p><strong>Session Hash:</strong> {{ session_hash }}</p>
+            <p><strong>Last Updated:</strong> {{ generated_at }}</p>
+        </div>
+    </div>
+    
+    <div class="dashboard-grid">
+        <div class="dashboard-card">
+            <h2>Summary</h2>
+            <div class="dashboard-stats">
+                <div class="stat-item">
+                    <span class="stat-value">{{ stats.log_count }}</span>
+                    <span class="stat-label">Log Files</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">{{ stats.html_count }}</span>
+                    <span class="stat-label">HTML Files</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">{{ stats.pdf_count }}</span>
+                    <span class="stat-label">PDF Files</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-card">
+            <h2>Execution Summaries</h2>
+            {% if summaries %}
+            <ul class="report-list">
+                {% for log in summaries %}
+                <li>
+                    <a href="{{ log.path }}">{{ log.file }}</a>
+                    <span class="report-date">{{ log.date }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="empty-list">No execution summaries available.</p>
+            {% endif %}
+        </div>
+        
+        <div class="dashboard-card">
+            <h2>Validation Summaries</h2>
+            {% if validation_summaries %}
+            <ul class="report-list">
+                {% for log in validation_summaries %}
+                <li>
+                    <a href="{{ log.path }}">{{ log.file }}</a>
+                    <span class="report-date">{{ log.date }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="empty-list">No validation summaries available.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="dashboard-section">
+        <h2>Log Files</h2>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td>{{ log.file }}</td>
+                        <td>{{ log.type }}</td>
+                        <td>{{ log.date }}</td>
+                        <td><a href="{{ log.path }}" class="button">View</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="dashboard-section">
+        <h2>Generated HTML Files</h2>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in html_files %}
+                    <tr>
+                        <td>{{ file.file }}</td>
+                        <td>{{ file.date }}</td>
+                        <td><a href="{{ file.path }}" class="button" target="_blank">View</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="dashboard-section">
+        <h2>Generated PDF Files</h2>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in pdf_files %}
+                    <tr>
+                        <td>{{ file.file }}</td>
+                        <td>{{ file.date }}</td>
+                        <td><a href="{{ file.path }}" class="button" target="_blank">View</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

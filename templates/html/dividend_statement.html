@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dividend Statement</title>
+    <link rel="stylesheet" href="dividend_statement_styles.css">
+</head>
+<body>
+    <div class="document dividend-statement">
+        <header class="header">
+            <div class="logo">
+                <img src="banner.png" alt="Company Logo">
+            </div>
+            <div class="document-title">
+                <h1>Dividend Statement</h1>
+            </div>
+        </header>
+
+        <section class="shareholder-info">
+            <h2>Shareholder Information</h2>
+            <div class="info-grid">
+                <div class="info-row">
+                    <div class="info-label">Shareholder Name:</div>
+                    <div class="info-value" id="SHAREHOLDER_NAME">{{.Transformed.SHAREHOLDER_NAME}}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Shareholder Number:</div>
+                    <div class="info-value" id="SHAREHOLDER_NUMBER">{{.Transformed.SHAREHOLDER_NUMBER}}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Dividend Date:</div>
+                    <div class="info-value" id="DIVIDEND_DATE">{{.Transformed.DIVIDEND_DATE}}</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="dividend-details">
+            <h2>Dividend Details</h2>
+            <table class="dividend-table">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Shares Held</th>
+                        <th>Dividend Per Share</th>
+                        <th>Gross Amount</th>
+                        <th>Tax Withheld</th>
+                        <th>Net Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Dividend Payment</td>
+                        <td id="SHARES_HELD">{{.Transformed.SHARES_HELD}}</td>
+                        <td id="DIVIDEND_PER_SHARE">{{.Transformed.DIVIDEND_PER_SHARE}}</td>
+                        <td id="DIVIDEND_AMOUNT">{{.Transformed.DIVIDEND_AMOUNT}}</td>
+                        <td id="TAX_WITHHELD">{{.Transformed.TAX_WITHHELD}}</td>
+                        <td id="NET_AMOUNT">{{.Transformed.NET_AMOUNT}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="payment-details">
+            <h2>Payment Information</h2>
+            <p>This dividend has been paid into your nominated bank account. Please check your bank account to confirm receipt.</p>
+        </section>
+
+        <footer class="footer">
+            <div class="contact-info">
+                <p>For any inquiries, please contact our Investor Relations department:</p>
+                <p>Email: investor.relations@company.com</p>
+                <p>Phone: +27 123 456 789</p>
+            </div>
+            <div class="disclaimer">
+                <p>This is an electronic statement. No signature is required.</p>
+                <p>© {{.Year}} Company Name. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,242 @@
+I'm working on a document processing system that needs several critical fixes. The system imports spreadsheets, validates data against schemas, and generates mapping files. Here are the specific issues that need to be fixed:
+
+1. FIX THE MAPPING FILE GENERATION:
+- The mapping file (output/[session_hash]/mappings/[session_hash]_mapping.json) is missing critical schema properties
+- Current mapping file only has basic properties:
+  {
+    "Company Name": {
+      "type": "COMPANY_NAME",
+      "validation": "LEV_DISTANCE"
+    }
+  }
+- It should include ALL schema properties like this:
+  {
+    "Company Name": {
+      "type": "COMPANY_NAME",
+      "validation": "LEV_DISTANCE",
+      "validation_type": "LEV_DISTANCE",
+      "list": "COMPANY_NAME",
+      "distance": 80,
+      "required": true,
+      "description": "Validation: LEV_DISTANCE. The company matched against the list of companies with 80% similarity",
+      "slug": ["COMPANY_NAME"]
+    }
+  }
+- We've added a create_mapping_entry function to mapper.py that includes all properties
+- This function must be used EVERYWHERE a mapping entry is created
+
+2. FIX DOCUMENT TYPE DETECTION:
+- When a new file is imported, the system must automatically detect which schema best matches the data
+- This is done in validate_data() function in validator.py
+- The process must:
+  1. Load all schemas from the schemas directory (schemas/*.json)
+  2. For each schema, match its field types against the data columns
+  3. Calculate a match score based on how many field types have matching columns
+  4. Select the schema with the highest match score
+- Example: If a spreadsheet has columns that match 8/10 fields in payment_advice_schema.json but only 3/10 fields in dividend_statement_schema.json, it should select payment_advice_schema.json
+
+3. UPDATE VALIDATION TO MATCH BY TYPES, NOT NAMES:
+- The system must match columns to field types based on their CONTENT, not their names
+- In find_best_column_match function in validator.py:
+  1. For each column, validate its data against the field type's validation rules
+  2. Calculate a validation score (percentage of valid values)
+  3. Select the column with the highest validation score as the best match
+- Example: If a column contains "ABC Corp", "XYZ Inc", "123 Ltd" it should match to COMPANY_NAME type regardless of what the column is called
+- Column names should only be used as a fallback when content validation is inconclusive
+- The match_schema function must be updated to use this approach
+
+4. IMPLEMENT MAX_MATCHES PROPERTY:
+- Some field types (like ADDRESS_LINE) should match multiple columns
+- In schemas/payment_advice_schema.json:
+  "ADDRESS_LINE": {
+    "description": "Validation: REGEX. The shareholder address line 1 to 5",
+    "validate_type": "REGEX",
+    "regex": "^.{2,}$",
+    "required": true,
+    "max_matches": 5,
+    "slug": ["ADDRESS_LINE"]
+  }
+- The match_schema function must:
+  1. Check if a field type has max_matches property (default to 1 if not present)
+  2. For fields with max_matches > 1, find multiple matching columns
+  3. Create additional field matches with names like FIELD_NAME_2, FIELD_NAME_3, etc.
+  4. Track which columns have already been matched to avoid duplicates
+- Example: ADDRESS_LINE with max_matches: 5 could match to "Address 1", "Address 2", "Address 3", "Address 4", "Address 5"
+
+5. FIX THE [ERRNO 22] INVALID ARGUMENT ERROR:
+- This error occurs when trying to validate or map data
+- It's likely related to file paths or arguments being passed to functions
+- Check all file operations in validator.py and mapper.py for proper error handling
+
+SPECIFIC IMPLEMENTATION DETAILS:
+
+1. In validator.py, update find_best_column_match function:
+```
+def find_best_column_match(field_name: str, field_def: Dict[str, Any],
+                          column_info: Dict[str, Dict[str, Any]],
+                          data: List[Dict[str, Any]],
+                          schema: Dict[str, Any],
+                          matched_columns: Optional[Set[str]] = None) -> Dict[str, Any]:
+    # Initialize matched_columns if not provided
+    if matched_columns is None:
+        matched_columns = set()
+        
+    # CONTENT-BASED MATCHING: Validate each column's content against this field type
+    best_content_match = None
+    best_content_score = 0
+    
+    for col_name in column_info:
+        # Skip columns that have already been matched to other fields
+        if col_name in matched_columns:
+            continue
+            
+        # Validate this column's values against the field definition
+        validation = validate_field_values(col_name, field_def, data, schema)
+        validation_score = validation.get("valid_percentage", 0)
+        
+        # If this is the best content match so far
+        if validation_score > best_content_score and validation_score > 50:  # Minimum threshold
+            best_content_score = validation_score
+            best_content_match = {
+                "field": field_name,
+                "column": col_name,
+                "match_type": "content_validation",
+                "score": validation_score,
+                "validation": validation
+            }
+    
+    # If we found a good content match, return it
+    if best_content_match and best_content_score > 70:  # Higher threshold for confidence
+        return best_content_match
+    
+    # FALLBACK TO NAME-BASED MATCHING if content matching didn't find a good match
+    # [rest of the function with name-based matching as fallback]
+```
+
+2. In validator.py, update match_schema function:
+```
+def match_schema(schema: Dict[str, Any], column_info: Dict[str, Dict[str, Any]], 
+                data: List[Dict[str, Any]]) -> Tuple[float, Dict[str, Any]]:
+    # Track matched fields and columns
+    matched_count = 0
+    field_matches = {}
+    matched_columns = set()  # Keep track of columns that have been matched
+    
+    # First pass: Process fields with max_matches=1 (default) to ensure they get priority
+    for field_name, field_def in schema_fields.items():
+        # Skip fields with max_matches > 1, they'll be processed in the second pass
+        if field_def.get("max_matches", 1) > 1:
+            continue
+            
+        best_match = find_best_column_match(field_name, field_def, column_info, data, schema, matched_columns)
+        
+        if best_match["score"] > 0 and best_match["column"]:
+            matched_count += 1
+            matched_columns.add(best_match["column"])  # Mark this column as matched
+            
+        field_matches[field_name] = best_match
+    
+    # Second pass: Process fields with max_matches > 1
+    for field_name, field_def in schema_fields.items():
+        max_matches = field_def.get("max_matches", 1)
+        if max_matches <= 1:
+            continue  # Already processed in first pass
+        
+        # For fields that can have multiple matches, find the best N matches
+        matches_found = 0
+        
+        # The primary match is already in field_matches if it was found
+        if field_name in field_matches and field_matches[field_name]["score"] > 0:
+            matches_found = 1
+        else:
+            # Find the first match
+            best_match = find_best_column_match(field_name, field_def, column_info, data, schema, matched_columns)
+            
+            if best_match["score"] > 0 and best_match["column"]:
+                matched_count += 1
+                matched_columns.add(best_match["column"])  # Mark this column as matched
+                matches_found = 1
+                
+            field_matches[field_name] = best_match
+        
+        # Find additional matches up to max_matches
+        # Check if there are any unmapped columns left
+        available_columns = [col for col in column_info.keys() if col not in matched_columns]
+        
+        if available_columns and matches_found < max_matches:
+            # Try to find additional matches up to max_matches
+            while matches_found < max_matches and available_columns:
+                # Create a new field name for the additional match
+                additional_field_name = f"{field_name}_{matches_found + 1}"
+                
+                # Find the next best match, excluding already matched columns
+                additional_match = find_best_column_match(field_name, field_def, column_info, data, schema, matched_columns)
+                
+                if additional_match["score"] > 0 and additional_match["column"]:
+                    matched_count += 1
+                    matched_columns.add(additional_match["column"])  # Mark this column as matched
+                    matches_found += 1
+                    
+                    # Update available columns
+                    available_columns = [col for col in column_info.keys() if col not in matched_columns]
+                    
+                    # Store the additional match with a numbered field name
+                    field_matches[additional_field_name] = additional_match
+                else:
+                    # No more good matches found
+                    break
+    
+    # Calculate match score as percentage of required fields that were matched
+    required_fields = [f for f, def_f in schema_fields.items() if def_f.get("required", False)]
+    if not required_fields:
+        # If no required fields, use all fields
+        match_score = (matched_count / len(schema_fields) * 100) if schema_fields else 0
+    else:
+        # Count how many required fields were matched
+        required_matched = sum(1 for f in required_fields if f in field_matches and field_matches[f]["column"])
+        match_score = (required_matched / len(required_fields) * 100) if required_fields else 0
+    
+    return match_score, field_matches
+```
+
+3. In mapper.py, ensure create_mapping_entry is used everywhere:
+```
+def create_mapping_entry(field_name: str, field_def: Dict[str, Any]) -> Dict[str, Any]:
+    validate_type = field_def.get("validate_type", "NONE")
+    
+    # Create a comprehensive mapping with all schema field properties
+    mapping_entry = {
+        "type": field_name,
+        "validation": validate_type,
+        "validation_type": validate_type  # For compatibility with example format
+    }
+    
+    # Copy all other properties from the field definition
+    if field_def.get("required"):
+        mapping_entry["required"] = field_def["required"]
+    
+    if field_def.get("description"):
+        mapping_entry["description"] = field_def["description"]
+    
+    if field_def.get("regex"):
+        mapping_entry["regex"] = field_def["regex"]
+    
+    if field_def.get("list"):
+        mapping_entry["list"] = field_def["list"]
+    
+    if field_def.get("distance"):
+        mapping_entry["distance"] = field_def["distance"]
+    
+    if field_def.get("enum"):
+        mapping_entry["enum"] = field_def["enum"]
+    
+    if field_def.get("max_matches"):
+        mapping_entry["max_matches"] = field_def["max_matches"]
+    
+    # Add slug if available or create one with the field name
+    mapping_entry["slug"] = field_def.get("slug", [field_name])
+    
+    return mapping_entry
+```
+
+The system has been working fine until recent changes broke these features. We need to restore functionality without introducing new bugs. Focus on minimal, targeted fixes to address these specific issues.

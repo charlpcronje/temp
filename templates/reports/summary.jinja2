@@ -1,0 +1,151 @@
+{% extends "base.jinja2" %}
+
+{% set active_report = "summary" %}
+{% set title = "Session Summary Report" %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div>Session Overview</div>
+        <div>Report Date: {{ report_date }}</div>
+    </div>
+    <div class="card-body">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Total Rows</div>
+                <div class="value">{{ dataset.total_rows }}</div>
+                <div class="description">Imported Records</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Document Type</div>
+                <div class="value">{{ session.document_type|default("Unknown") }}</div>
+                <div class="description">Detected Schema</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">HTML Documents</div>
+                <div class="value">{{ documents.html_count }}</div>
+                <div class="description">Generated HTML Files</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">PDF Documents</div>
+                <div class="value">{{ documents.pdf_count }}</div>
+                <div class="description">Generated PDF Files</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div>Session Information</div>
+    </div>
+    <div class="card-body">
+        <table>
+            <tr>
+                <th>Session Hash</th>
+                <td><span class="mono">{{ session.hash }}</span></td>
+            </tr>
+            <tr>
+                <th>Imported File</th>
+                <td>{{ session.imported_file }}</td>
+            </tr>
+            <tr>
+                <th>Import Date</th>
+                <td>{{ session.imported_on }}</td>
+            </tr>
+            <tr>
+                <th>Document Type</th>
+                <td>{{ session.document_type|default("Unknown") }}</td>
+            </tr>
+            <tr>
+                <th>Output Folder</th>
+                <td><span class="mono">{{ session.output_folder }}</span></td>
+            </tr>
+            <tr>
+                <th>Database</th>
+                <td><span class="mono">{{ session.sqlite_db }}</span></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div>Document Generation Status</div>
+    </div>
+    <div class="card-body">
+        <h3>Generated HTML Files ({{ documents.html_count }})</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>File Name</th>
+                    <th>Path</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for html_file in documents.html_files %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ html_file }}</td>
+                    <td><span class="mono">{{ session.output_folder }}/html/{{ html_file }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3">No HTML files generated</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>Generated PDF Files ({{ documents.pdf_count }})</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>File Name</th>
+                    <th>Path</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pdf_file in documents.pdf_files %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ pdf_file }}</td>
+                    <td><span class="mono">{{ session.output_folder }}/pdf/{{ pdf_file }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3">No PDF files generated</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div>System Recommendations</div>
+    </div>
+    <div class="card-body">
+        {% set has_exceptions = exceptions.unmatched_rows|length > 0 or exceptions.ambiguous_matches|length > 0 %}
+        {% if has_exceptions %}
+        <div class="status status-warning">⚠️ Exceptions Found</div>
+        <p>This session has unresolved exceptions that should be addressed before finalization.</p>
+        <ul>
+            {% if exceptions.unmatched_rows|length > 0 %}
+            <li>{{ exceptions.unmatched_rows|length }} unmatched rows need resolution</li>
+            {% endif %}
+            {% if exceptions.ambiguous_matches|length > 0 %}
+            <li>{{ exceptions.ambiguous_matches|length }} ambiguous matches need clarification</li>
+            {% endif %}
+        </ul>
+        <p>View the <a href="exceptions.html">Exceptions Report</a> for detailed information.</p>
+        {% else %}
+        <div class="status status-success">✅ Ready for Finalization</div>
+        <p>No exceptions found. This session is ready for finalization.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

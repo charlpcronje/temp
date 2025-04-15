@@ -1,0 +1,132 @@
+/* Dividend Statement Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.document {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #0056b3;
+}
+
+.logo img {
+    max-height: 80px;
+}
+
+.document-title h1 {
+    color: #0056b3;
+    margin: 0;
+}
+
+section {
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #0056b3;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+    margin-top: 0;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.info-row {
+    display: flex;
+    border-bottom: 1px solid #eee;
+    padding: 5px 0;
+}
+
+.info-label {
+    font-weight: bold;
+    width: 40%;
+}
+
+.info-value {
+    width: 60%;
+}
+
+.dividend-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+}
+
+.dividend-table th, .dividend-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: right;
+}
+
+.dividend-table th:first-child, .dividend-table td:first-child {
+    text-align: left;
+}
+
+.dividend-table th {
+    background-color: #f2f7fd;
+    color: #0056b3;
+}
+
+.payment-details {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+}
+
+.footer {
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    font-size: 0.9em;
+}
+
+.contact-info {
+    margin-bottom: 15px;
+}
+
+.disclaimer {
+    color: #777;
+    font-size: 0.8em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .logo img {
+        margin-bottom: 10px;
+    }
+    
+    .info-row {
+        flex-direction: column;
+    }
+    
+    .info-label, .info-value {
+        width: 100%;
+    }
+    
+    .dividend-table {
+        font-size: 0.9em;
+    }
+}

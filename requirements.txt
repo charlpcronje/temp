@@ -1,0 +1,31 @@
+# requirements.txt
+# Python requirements for the DocTypeGen API including user management
+# Install with: pip install -r requirements.txt
+
+typer>=0.9.0
+uvicorn>=0.23.2
+jinja2>=3.1.2
+python-levenshtein>=0.21.1
+fastapi==0.104.1
+pydantic==2.4.2
+passlib==1.7.4
+pyjwt==2.8.0
+python-multipart==0.0.6
+python-dotenv==1.0.0
+bcrypt==4.0.1
+pandas==2.1.2
+python-dateutil==2.8.2
+Pillow==10.1.0
+WeasyPrint==60.1
+
+# Optional dependencies based on PDF generator choice
+# Uncomment one of the following:
+# weasyprint>=59.0     # Pure Python PDF generator
+# OR ensure wkhtmltopdf is installed in your system
+
+# Rich CLI interface
+rich>=13.5.2
+
+# For data analysis
+xlrd==2.0.1            # Excel file support
+openpyxl==3.1.2        # For newer Excel formats

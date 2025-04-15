@@ -1,0 +1,14 @@
+{
+  "last_updated": "2025-04-15T12:09:16.706754",
+  "active_session": true,
+  "session_hash": "41c7a0579c0beff3d99fd1d3efae10ffc02bcf6ce30cc84847200c5703ae50cf",
+  "current_state": {
+    "hash": "41c7a0579c0beff3d99fd1d3efae10ffc02bcf6ce30cc84847200c5703ae50cf",
+    "sqlite_db_file": "C:\\xampp\\htdocs\\DocTypeGen\\output\\41c7a0579c0beff3d99fd1d3efae10ffc02bcf6ce30cc84847200c5703ae50cf\\data.db",
+    "output_folder": "C:\\xampp\\htdocs\\DocTypeGen\\output\\41c7a0579c0beff3d99fd1d3efae10ffc02bcf6ce30cc84847200c5703ae50cf",
+    "last_updated": "2025-04-15T12:09:16.706754",
+    "last_operation": "GENERATE_PDF",
+    "imported_file": "UPDATE_MAPPING",
+    "document_type": "payment_advice"
+  }
+}

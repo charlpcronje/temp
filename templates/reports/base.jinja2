@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title | default("Document Report") }}</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">DocTypeGen</div>
+        <h1>{{ title | default("Document Report") }}</h1>
+        <div class="session-info">
+            <span>Session: {{ session.hash }}</span>
+            <span>Generated: {{ report_date }}</span>
+        </div>
+    </header>
+    
+    <nav class="breadcrumbs">
+        <a href="index.html">Home</a>
+        {% if active_report %}
+        <span>&gt;</span>
+        <a href="{{ active_report }}.html" class="active">{{ active_report | title }}</a>
+        {% endif %}
+    </nav>
+    
+    <div class="report-nav">
+        <a href="summary.html" class="{{ 'active' if active_report == 'summary' else '' }}">Summary</a>
+        <a href="mapping.html" class="{{ 'active' if active_report == 'mapping' else '' }}">Mapping</a>
+        <a href="verify.html" class="{{ 'active' if active_report == 'verify' else '' }}">Verify</a>
+        <a href="exceptions.html" class="{{ 'active' if active_report == 'exceptions' else '' }}">Exceptions</a>
+    </div>
+    
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    
+    <footer>
+        <div class="actions">
+            <a href="{{ active_report | default('index') }}.pdf" class="button">Download PDF</a>
+        </div>
+        <div class="info">
+            <p>Report ID: <span class="mono">{{ report_id }}</span></p>
+            <p>Document Type: {{ session.document_type }}</p>
+            <p>
+                <a href="meta.json" target="_blank">View Report Metadata</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

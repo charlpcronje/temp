@@ -1,0 +1,27 @@
+I'm working on a document processing system and need to fix several critical issues:
+
+1. FIX THE MAPPING FILE GENERATION:
+- The mapping file is missing critical schema properties (description, regex, required, etc.)
+- We've added a create_mapping_entry function to mapper.py that includes all properties
+- We need to ensure this function is used everywhere a mapping entry is created
+
+2. FIX DOCUMENT TYPE DETECTION:
+- The system should automatically detect which schema best matches the imported data
+- This is done by validating data columns against each schema's field types
+- The schema with the highest validation score should be selected
+
+3. UPDATE VALIDATION TO MATCH BY TYPES, NOT NAMES:
+- Columns should be matched to field types based on their content, not their names
+- The find_best_column_match function should prioritize content validation over name matching
+- Column names should only be used as a fallback when content validation is inconclusive
+
+4. IMPLEMENT MAX_MATCHES PROPERTY:
+- Some field types (like ADDRESS_LINE) should match multiple columns
+- The max_matches property in the schema controls how many columns can be mapped to a field type
+- When max_matches > 1, find multiple matching columns and create numbered field matches
+
+5. FIX THE [ERRNO 22] INVALID ARGUMENT ERROR:
+- This error occurs when trying to validate or map data
+- It's likely related to file paths or arguments being passed to functions
+
+The system has been working fine until recent changes broke these features. We need to restore functionality without introducing new bugs. Focus on minimal, targeted fixes to address these specific issues.

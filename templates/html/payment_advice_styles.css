@@ -1,0 +1,85 @@
+/* Payment Advice Styles */
+@page {
+    size: a4 portrait;
+    margin: 2cm;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+    color: #000000;
+    font-size: 12pt;
+}
+
+img.banner {
+    width: 100%;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.address-section {
+    margin-bottom: 20px;
+}
+
+.transaction-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 18pt;
+    margin: 15px 0;
+}
+
+.transaction-info {
+    margin-bottom: 10px;
+}
+
+.payment-details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+.payment-details-table, th, td {
+    border: 1px solid #000;
+}
+
+td {
+    padding: 8px;
+    vertical-align: top;
+}
+
+.contact-info {
+    margin-bottom: 10px;
+}
+
+.tax-note {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+/* Make sure table column widths are balanced */
+#payment-details-table td:first-child {
+    width: 40%;
+    font-weight: bold;
+}
+
+#payment-details-table td:last-child {
+    width: 60%;
+}
+
+/* Address formatting */
+#shareholder_name {
+    font-weight: bold;
+}
+
+/* Specific field styling */
+#amount_paid {
+    font-weight: bold;
+}
